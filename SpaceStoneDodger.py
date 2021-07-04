@@ -9,6 +9,7 @@ pygame.init()
 # Constants declaration
 ASSET_DIR = "assets"
 SHIP_SPRITE = pygame.image.load(os.path.join(ASSET_DIR, "Ship.png"))
+SPACE_BG = pygame.image.load(os.path.join(ASSET_DIR, 'bg_blurry.jpg'))
 FPS = 60
 SCREEN_WIDTH, SCREEN_HEIGHT = 900, 500
 PLAYER_HIT = pygame.USEREVENT + 1 # Custom event for collisions
@@ -144,7 +145,7 @@ class Lifebar(pygame.sprite.Sprite):
 
 class Background(Game_element):
     def __init__(self):
-        self.sprite_image = pygame.image.load(os.path.join(ASSET_DIR, 'space.png'))
+        self.sprite_image = SPACE_BG
         self.bg = pygame.transform.scale(self.sprite_image, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
     def game_tick_update(self, window):
