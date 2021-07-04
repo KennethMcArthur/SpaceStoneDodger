@@ -1,3 +1,9 @@
+# Assets folder
+assets/
+
+# Batch files
+*.bat
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -106,6 +112,7 @@ celerybeat.pid
 .venv
 env/
 venv/
+pyvenv/
 ENV/
 env.bak/
 venv.bak/
@@ -113,6 +120,10 @@ venv.bak/
 # Spyder project settings
 .spyderproject
 .spyproject
+
+# Sublime-Text project settings
+*.sublime-project
+*.sublime-workspace
 
 # Rope project settings
 .ropeproject
