@@ -36,7 +36,10 @@ class Player_pawn(pygame.sprite.Sprite):
         self.rect = self.sprite_image.get_rect()
         self.SHIP_SPEED = 5
         self.health = 10
+        self.max_health = 10
         self.invul_timer = 0
+        self.REPAIR_TIME = 5 * FPS # Frames required to gain 1 life
+        self.repair_timer = self.REPAIR_TIME
 
     def handle_movement(self, keys_pressed):
         if keys_pressed[pygame.K_a] and self.x - self.SHIP_SPEED > 0: #left key
@@ -53,13 +56,26 @@ class Player_pawn(pygame.sprite.Sprite):
             self.health -= 1
             if self.health == 0: pygame.event.post(pygame.event.Event(GAME_OVER))
             self.invul_timer = 3 * FPS
-        
+
+    def repair(self):
+        if self.health < self.max_health:
+            if self.repair_timer == 0:
+                self.health += 1
+                self.repair_timer = self.REPAIR_TIME
+            else:
+                self.repair_timer -= 1
+
+    def get_repair_status(self):
+        """ Returns a percentage of the current repair state """
+        return 100 - (100 * self.repair_timer) // self.REPAIR_TIME
+
     def game_tick_update(self, window):
         if self.invul_timer > 0:
             self.invul_timer -= 1
             self.sprite_image.set_alpha(125)
         else:
             self.sprite_image.set_alpha(255)
+            self.repair()
         self.rect.x, self.rect.y = self.x, self.y
         window.blit(self.sprite_image, (self.x, self.y))
         
@@ -122,15 +138,15 @@ class Field(Game_element):
             if pygame.sprite.collide_circle(element, self.player):
                 pygame.event.post(pygame.event.Event(PLAYER_HIT))
                 
-
         # Inserting new asteroids if size is greater
         self.elements.extend([self.new_asteroid() for _ in range(self.size - len(self.elements))])
 
 
 class Lifebar(pygame.sprite.Sprite):
     def __init__(self, player):
+        self.UI_SPRITE_SIZE = 24
         self.sprite_image = SHIP_SPRITE
-        self.sprite_image = pygame.transform.scale(self.sprite_image, (24, 24))
+        self.sprite_image = pygame.transform.scale(self.sprite_image, (self.UI_SPRITE_SIZE, self.UI_SPRITE_SIZE))
         self.sprite_image = pygame.transform.rotate(self.sprite_image, 90)
         self.x = 0
         self.y = 10
@@ -141,6 +157,12 @@ class Lifebar(pygame.sprite.Sprite):
         for lifepoint in range(current_health):
             coord_x = SCREEN_WIDTH - (lifepoint+1) * 32
             window.blit(self.sprite_image, (coord_x, self.y))
+        if self.player.get_repair_status() > 0:
+            newscale = int(self.UI_SPRITE_SIZE * (self.player.get_repair_status() / 100))
+            smallsprite = pygame.transform.scale(self.sprite_image, (newscale, newscale))
+            coord_x = SCREEN_WIDTH - (current_health+1) * 32 + (self.UI_SPRITE_SIZE // 2 - newscale //2)
+            coord_y = self.y + (self.UI_SPRITE_SIZE // 2 - newscale //2)
+            window.blit(smallsprite, (coord_x, coord_y))
 
 
 class Background(Game_element):
@@ -207,6 +229,9 @@ def main():
             num_asteroids += 1
             testfield.resize(num_asteroids)
             print("Asteroids: ", num_asteroids)
+        
+        if test_event_counter % 100 == 0:
+            print("Repair state: ", testplayer.get_repair_status())
         
 
 
