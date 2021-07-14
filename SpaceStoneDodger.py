@@ -2,6 +2,7 @@
 # pylint: disable=no-member
 
 import pygame, os, sys
+import ssd_player
 from random import randint
 
 pygame.init()
@@ -13,7 +14,7 @@ SPACE_BG = pygame.image.load(os.path.join(ASSET_DIR, 'bg_blurry.jpg'))
 FPS = 60
 SCREEN_WIDTH, SCREEN_HEIGHT = 900, 500
 PLAYER_HIT = pygame.USEREVENT + 1 # Custom event for collisions
-GAME_OVER = pygame.USEREVENT + 2
+PLAYER_DEAD = pygame.USEREVENT + 2
 
 
 # Super class to give game_tick_update() method to all classes
@@ -25,60 +26,6 @@ class Game_element:
         pass
 
 
-class Player_pawn(pygame.sprite.Sprite):
-    def __init__(self):
-        self.sprite_image = SHIP_SPRITE
-        self.height = self.sprite_image.get_height()
-        self.width = self.sprite_image.get_width()
-        self.radius = self.sprite_image.get_width() / 2
-        self.x = 50
-        self.y = SCREEN_HEIGHT // 2
-        self.rect = self.sprite_image.get_rect()
-        self.SHIP_SPEED = 5
-        self.health = 10
-        self.max_health = 10
-        self.invul_timer = 0
-        self.REPAIR_TIME = 5 * FPS # Frames required to gain 1 life
-        self.repair_timer = self.REPAIR_TIME
-
-    def handle_movement(self, keys_pressed):
-        if keys_pressed[pygame.K_a] and self.x - self.SHIP_SPEED > 0: #left key
-            self.x -= self.SHIP_SPEED
-        if keys_pressed[pygame.K_d] and self.x + self.SHIP_SPEED + self.width < SCREEN_WIDTH: #right key
-            self.x += self.SHIP_SPEED
-        if keys_pressed[pygame.K_w] and self.y - self.SHIP_SPEED > 0: #up key
-            self.y -= self.SHIP_SPEED
-        if keys_pressed[pygame.K_s] and self.y + self.SHIP_SPEED + self.height < SCREEN_HEIGHT: #down key
-            self.y += self.SHIP_SPEED
-
-    def got_hit(self):
-        if self.invul_timer == 0:
-            self.health -= 1
-            if self.health == 0: pygame.event.post(pygame.event.Event(GAME_OVER))
-            self.invul_timer = 3 * FPS
-
-    def repair(self):
-        if self.health < self.max_health:
-            if self.repair_timer == 0:
-                self.health += 1
-                self.repair_timer = self.REPAIR_TIME
-            else:
-                self.repair_timer -= 1
-
-    def get_repair_status(self):
-        """ Returns a percentage of the current repair state """
-        return 100 - (100 * self.repair_timer) // self.REPAIR_TIME
-
-    def game_tick_update(self, window):
-        if self.invul_timer > 0:
-            self.invul_timer -= 1
-            self.sprite_image.set_alpha(125)
-        else:
-            self.sprite_image.set_alpha(255)
-            self.repair()
-        self.rect.x, self.rect.y = self.x, self.y
-        window.blit(self.sprite_image, (self.x, self.y))
-        
 
 # A single asteroid class
 class Asteroid(pygame.sprite.Sprite):
@@ -187,10 +134,10 @@ def main():
     num_asteroids = 5
 
     bg = Background()
-    testplayer = Player_pawn()
+    testplayer = ssd_player.Player_pawn(SHIP_SPRITE, 50, SCREEN_HEIGHT // 2)
     testlifebar = Lifebar(testplayer)
     testfield = Field(num_asteroids, testplayer)
-    
+
     updatelist = [] # Append order is draw order
     updatelist.append(bg)
     updatelist.append(testplayer)
@@ -212,13 +159,13 @@ def main():
                 sys.exit() # ensures we quit the program
             
             if event.type == PLAYER_HIT:
-                testplayer.got_hit()
-            if event.type == GAME_OVER:
+                testplayer.got_hit(PLAYER_DEAD)
+            if event.type == PLAYER_DEAD:
                 updatelist.remove(testplayer)
 
         # Key press capturing
         keys_pressed = pygame.key.get_pressed() # Gets a list of the key pressed        
-        testplayer.handle_movement(keys_pressed)
+        testplayer.handle_movement(keys_pressed, SCREEN_WIDTH, SCREEN_HEIGHT)
 
         # Drawing sequence
         for gameobj in updatelist:
