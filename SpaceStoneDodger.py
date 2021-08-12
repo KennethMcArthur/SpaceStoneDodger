@@ -5,43 +5,11 @@ import pygame, sys
 import ssd_constants as cst
 import ssd_player as plr
 import ssd_asteroid as ast
+import ssd_starfield as stf
+import ssd_background as bg
 
 
 pygame.init()
-
-
-class Lifebar(pygame.sprite.Sprite):
-    def __init__(self, player):
-        self.UI_SPRITE_SIZE = 24
-        self.sprite_image = cst.SHIP_SPRITE
-        self.sprite_image = pygame.transform.scale(self.sprite_image, (self.UI_SPRITE_SIZE, self.UI_SPRITE_SIZE))
-        self.sprite_image = pygame.transform.rotate(self.sprite_image, 90)
-        self.x = 0
-        self.y = 10
-        self.player = player
-
-    def game_tick_update(self, window):
-        current_health = self.player.health
-        for lifepoint in range(current_health):
-            coord_x = cst.SCREEN_WIDTH - (lifepoint+1) * 32
-            window.blit(self.sprite_image, (coord_x, self.y))
-        if self.player.get_repair_status() > 0:
-            newscale = int(self.UI_SPRITE_SIZE * (self.player.get_repair_status() / 100))
-            smallsprite = pygame.transform.scale(self.sprite_image, (newscale, newscale))
-            coord_x = cst.SCREEN_WIDTH - (current_health+1) * 32 + (self.UI_SPRITE_SIZE // 2 - newscale //2)
-            coord_y = self.y + (self.UI_SPRITE_SIZE // 2 - newscale //2)
-            window.blit(smallsprite, (coord_x, coord_y))
-
-
-class Background:
-    def __init__(self):
-        self.sprite_image = cst.SPACE_BG
-        self.bg = pygame.transform.scale(self.sprite_image, (cst.SCREEN_WIDTH, cst.SCREEN_HEIGHT))
-
-    def game_tick_update(self, window):
-        window.blit(self.bg, (0,0))
-
-
 
 
 
@@ -53,17 +21,20 @@ def main():
     clock = pygame.time.Clock() # a clock object to slow the main loop
     
     num_asteroids = 5
+    num_stars = 15
 
-    bg = Background()
-    testplayer = plr.Player_pawn(50, cst.SCREEN_HEIGHT // 2)
-    testlifebar = Lifebar(testplayer)
-    testfield = ast.Field(num_asteroids, testplayer)
+    level_background = bg.Background()
+    starfield = stf.Starfield(num_stars)
+    player = plr.Player_pawn(50, cst.SCREEN_HEIGHT // 2)
+    ui_lifebar = plr.Lifebar(player)
+    asteroid_field = ast.Field(num_asteroids, player)
 
     updatelist = [] # Append order is draw order
-    updatelist.append(bg)
-    updatelist.append(testplayer)
-    updatelist.append(testfield)
-    updatelist.append(testlifebar)
+    updatelist.append(level_background)
+    updatelist.append(starfield)
+    updatelist.append(player)
+    updatelist.append(asteroid_field)
+    updatelist.append(ui_lifebar)
 
     test_event_counter = 0
 
@@ -80,13 +51,13 @@ def main():
                 sys.exit() # ensures we quit the program
             
             if event.type == cst.PLAYER_HIT:
-                testplayer.got_hit(cst.PLAYER_DEAD)
+                player.got_hit(cst.PLAYER_DEAD)
             if event.type == cst.PLAYER_DEAD:
-                updatelist.remove(testplayer)
+                updatelist.remove(player)
 
         # Key press capturing
         keys_pressed = pygame.key.get_pressed() # Gets a list of the key pressed        
-        testplayer.handle_movement(keys_pressed)
+        player.handle_movement(keys_pressed)
 
         # Drawing sequence
         for gameobj in updatelist:
@@ -95,11 +66,11 @@ def main():
 
         if test_event_counter % 400 == 0: # Every 400 ticks
             num_asteroids += 1
-            testfield.resize(num_asteroids)
+            asteroid_field.resize(num_asteroids)
             print("Asteroids: ", num_asteroids)
         
         if test_event_counter % 100 == 0:
-            print("Repair state: ", testplayer.get_repair_status())
+            print("Repair state: ", player.get_repair_status())
         
 
 

@@ -7,13 +7,9 @@ import ssd_constants as cst
 
 
 class Player_pawn(pygame.sprite.Sprite):
-    """ Player class
+    """ Player class """
 
-    Parameters:
-    -start_x: x position of the player (int)
-    -start_y: y position of the player (int)
-    """
-    def __init__(self, start_x, start_y):
+    def __init__(self, start_x: int, start_y: int) -> None:
         self.sprite_image = cst.SHIP_SPRITE
         self.x = start_x
         self.y = start_y
@@ -29,13 +25,8 @@ class Player_pawn(pygame.sprite.Sprite):
         self.repair_timer = self.REPAIR_TIME
 
 
-    def handle_movement(self, keys_pressed):
-        """
-        Manages the movement of the player based on key pressing
-
-        Parameters:
-        -keys_pressed: what keys are pressed (list)
-        """
+    def handle_movement(self, keys_pressed: list) -> None:
+        """ Manages the movement of the player based on key pressing """
         if keys_pressed[pygame.K_a] and self.x - self.SHIP_SPEED > 0: #left key
             self.x -= self.SHIP_SPEED
         if keys_pressed[pygame.K_d] and self.x + self.SHIP_SPEED + self.width < cst.SCREEN_WIDTH: #right key
@@ -47,12 +38,7 @@ class Player_pawn(pygame.sprite.Sprite):
 
 
     def got_hit(self, game_over_event):
-        """
-        Manages what happens when the player gets hit
-
-        Parameters:
-        -game_over_event: the event to be trigged on game over (pygame event)
-        """
+        """ Manages what happens when the player gets hit """
         if self.invul_timer == 0:
             self.health -= 1
             if self.health == 0: pygame.event.post(pygame.event.Event(game_over_event))
@@ -60,7 +46,7 @@ class Player_pawn(pygame.sprite.Sprite):
             self.repair_timer = self.REPAIR_TIME # Resetting repair state upon hit
 
 
-    def repair(self):
+    def repair(self) -> None:
         """ Checks the repair timer """
         if self.health < self.max_health:
             if self.repair_timer == 0:
@@ -70,7 +56,7 @@ class Player_pawn(pygame.sprite.Sprite):
                 self.repair_timer -= 1
 
 
-    def get_repair_status(self):
+    def get_repair_status(self) -> int:
         """ Returns a percentage of the current repair state """
         return 100 - (100 * self.repair_timer) // self.REPAIR_TIME
 
@@ -85,3 +71,28 @@ class Player_pawn(pygame.sprite.Sprite):
         self.rect.x, self.rect.y = self.x, self.y
         window.blit(self.sprite_image, (self.x, self.y))
    
+
+
+
+
+class Lifebar(pygame.sprite.Sprite):
+    def __init__(self, player: Player_pawn) -> None:
+        self.UI_SPRITE_SIZE = 24
+        self.sprite_image = cst.SHIP_SPRITE
+        self.sprite_image = pygame.transform.scale(self.sprite_image, (self.UI_SPRITE_SIZE, self.UI_SPRITE_SIZE))
+        self.sprite_image = pygame.transform.rotate(self.sprite_image, 90)
+        self.x = 0
+        self.y = 10
+        self.player = player
+
+    def game_tick_update(self, window):
+        current_health = self.player.health
+        for lifepoint in range(current_health):
+            coord_x = cst.SCREEN_WIDTH - (lifepoint+1) * 32
+            window.blit(self.sprite_image, (coord_x, self.y))
+        if self.player.get_repair_status() > 0:
+            newscale = int(self.UI_SPRITE_SIZE * (self.player.get_repair_status() / 100))
+            smallsprite = pygame.transform.scale(self.sprite_image, (newscale, newscale))
+            coord_x = cst.SCREEN_WIDTH - (current_health+1) * 32 + (self.UI_SPRITE_SIZE // 2 - newscale //2)
+            coord_y = self.y + (self.UI_SPRITE_SIZE // 2 - newscale //2)
+            window.blit(smallsprite, (coord_x, coord_y))

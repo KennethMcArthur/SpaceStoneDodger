@@ -2,7 +2,7 @@
 
 # SpaceStoneDodger: Asteroid and Asteroid Field Classes
 
-import pygame, os
+import pygame
 from random import randint
 import ssd_constants as cst
 
@@ -99,6 +99,7 @@ class Field:
                     element.relocate(newx, newy, newspeed)
             element.game_tick_update(window)
 
+            # Collisions checking
             if pygame.sprite.collide_circle(element, self.player):
                 pygame.event.post(pygame.event.Event(cst.PLAYER_HIT))
                 
