@@ -42,6 +42,9 @@ class Field:
     Parameters:
     -player: the player object, for collisions checking (player Class object)
     """
+
+    y_offset = CST.ASTEROID_SPRITE.get_height() // 2
+
     def __init__(self, howmany: int, player) -> None:
         self.size = howmany
         self.player = player
@@ -54,7 +57,7 @@ class Field:
     def new_asteroid(self) -> Asteroid:
         """ Internal method to create a new single asteroid to populate the Field """
         return Asteroid(CST.SCREEN_WIDTH * 1.5 + randint(0, 100),
-                        randint(0, CST.SCREEN_HEIGHT),
+                        randint(0-Field.y_offset , CST.SCREEN_HEIGHT-Field.y_offset),
                         randint(self.min_speed, self.max_speed))
 
 
@@ -74,7 +77,7 @@ class Field:
                     continue
                 else:
                     newx = CST.SCREEN_WIDTH * 1.5 + randint(0,50)
-                    newy = randint(0, CST.SCREEN_HEIGHT)
+                    newy = randint(0-Field.y_offset, CST.SCREEN_HEIGHT-Field.y_offset)
                     newspeed = randint(self.min_speed, self.max_speed)
                     element.relocate(newx, newy, newspeed)
             element.game_tick_update(window)
@@ -85,3 +88,51 @@ class Field:
                 
         # Inserting new asteroids if size is greater
         self.elements.extend([self.new_asteroid() for _ in range(self.size - len(self.elements))])
+
+
+
+
+
+
+
+# TESTING AREA
+if __name__ == "__main__":
+    import sys
+    import ssd_background as bg
+    import ssd_player as plr
+
+    pygame.init()
+
+    WIN = pygame.display.set_mode((CST.SCREEN_WIDTH, CST.SCREEN_HEIGHT))
+    pygame.display.set_caption("Test Field")
+
+    clock = pygame.time.Clock() # a clock object to slow the main loop
+    
+    num_asteroids = 100
+    dummyplayer = plr.Player_pawn(50,50)
+    testfield = Field(num_asteroids, dummyplayer)
+    testbg = bg.Background()
+
+    updatelist = [] # Append order is draw order
+    updatelist.append(testbg)
+    updatelist.append(testfield)
+
+
+    # This will be our actual main game loop
+    while True:
+        clock.tick(CST.FPS) # this slows the loop to the defined speed
+
+        for event in pygame.event.get():
+            # Handling of quit event
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit() # ensures we quit the program
+            
+        # Key press capturing
+        keys_pressed = pygame.key.get_pressed() # Gets a list of the key pressed        
+
+        # Drawing sequence
+        for gameobj in updatelist:
+            gameobj.game_tick_update(WIN) # All classes have this methods
+
+        pygame.display.update()
