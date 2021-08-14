@@ -2,7 +2,7 @@
 # pylint: disable=no-member
 
 import pygame, sys
-import ssd_constants as cst
+import ssd_constants as CST
 import ssd_player as plr
 import ssd_asteroid as ast
 import ssd_starfield as stf
@@ -15,7 +15,7 @@ pygame.init()
 
 def main():
     # Defining our game window
-    WIN = pygame.display.set_mode((cst.SCREEN_WIDTH, cst.SCREEN_HEIGHT))
+    WIN = pygame.display.set_mode((CST.SCREEN_WIDTH, CST.SCREEN_HEIGHT))
     pygame.display.set_caption("Space Stone Dodger!")
 
     clock = pygame.time.Clock() # a clock object to slow the main loop
@@ -25,7 +25,7 @@ def main():
 
     level_background = bg.Background()
     starfield = stf.Starfield(num_stars)
-    player = plr.Player_pawn(50, cst.SCREEN_HEIGHT // 2)
+    player = plr.Player_pawn(50, CST.SCREEN_HEIGHT // 2)
     ui_lifebar = plr.Lifebar(player)
     asteroid_field = ast.Field(num_asteroids, player)
 
@@ -40,7 +40,7 @@ def main():
 
     # This will be our actual main game loop
     while True:
-        clock.tick(cst.FPS) # this slows the loop to the defined speed
+        clock.tick(CST.FPS) # this slows the loop to the defined speed
 
         test_event_counter += 1
 
@@ -50,9 +50,9 @@ def main():
                 pygame.quit()
                 sys.exit() # ensures we quit the program
             
-            if event.type == cst.PLAYER_HIT:
-                player.got_hit(cst.PLAYER_DEAD)
-            if event.type == cst.PLAYER_DEAD:
+            if event.type == CST.PLAYER_HIT:
+                player.got_hit(CST.PLAYER_DEAD)
+            if event.type == CST.PLAYER_DEAD:
                 updatelist.remove(player)
 
         # Key press capturing

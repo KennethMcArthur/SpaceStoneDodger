@@ -8,6 +8,7 @@ import pygame, os
 # Game Parameters
 FPS = 60
 SCREEN_WIDTH, SCREEN_HEIGHT = 900, 500
+STARS_SPEED = 2
 
 
 # Assets Constants
