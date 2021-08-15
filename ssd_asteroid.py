@@ -76,17 +76,18 @@ class Field:
                     self.to_be_deleted -= 1
                     continue
                 else:
-                    newx = CST.SCREEN_WIDTH * 1.5 + randint(0,50)
+                    newx = CST.SCREEN_WIDTH + randint(0, CST.SCREEN_WIDTH * 1.5)
                     newy = randint(0-Field.y_offset, CST.SCREEN_HEIGHT-Field.y_offset)
                     newspeed = randint(self.min_speed, self.max_speed)
                     element.relocate(newx, newy, newspeed)
+
             element.game_tick_update(window)
 
             # Collisions checking
             if pygame.sprite.collide_circle(element, self.player):
                 pygame.event.post(pygame.event.Event(CST.PLAYER_HIT))
                 
-        # Inserting new asteroids if size is greater
+        # Adding new asteroids if size is greater
         self.elements.extend([self.new_asteroid() for _ in range(self.size - len(self.elements))])
 
 
@@ -116,7 +117,6 @@ if __name__ == "__main__":
     updatelist = [] # Append order is draw order
     updatelist.append(testbg)
     updatelist.append(testfield)
-
 
     # This will be our actual main game loop
     while True:
