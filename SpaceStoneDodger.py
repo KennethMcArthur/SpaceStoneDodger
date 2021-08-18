@@ -67,9 +67,6 @@ def main():
             asteroid_field.resize(num_asteroids)
             print("Asteroids: ", num_asteroids)
         
-        if test_event_counter % 100 == 0:
-            print("Repair state: ", player.get_repair_status())
-        
         clock.tick(CST.FPS) # this slows the loop to the defined speed
 
 
