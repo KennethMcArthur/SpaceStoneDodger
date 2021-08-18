@@ -33,6 +33,11 @@ class Asteroid(pygame.sprite.Sprite):
         window.blit(self.sprite_image, (self.x, self.y))
 
 
+    def is_offscreen_left(self) -> bool:
+        """ Checks if the asteroid is completely off screen to the left """
+        return self.x < (0 - self.width)
+
+
 
 # This class is a "group manager" for asteroids
 class Field:
@@ -65,12 +70,14 @@ class Field:
         """ Resizes the number of asteroids of the screen. The Field acts accordingly """
         self.size = newsize
         self.to_be_deleted = max(0, len(self.elements) - self.size) # Compressed if
+        # Adding new asteroids if size is greater
+        self.elements.extend([self.new_asteroid() for _ in range(self.size - len(self.elements))])
 
 
     def game_tick_update(self, window: pygame.Surface) -> None:
 
         for element in self.elements[:]: # TRICK: iterating a COPY of the list allows safe resize of that list
-            if element.x < 0 - element.width:
+            if element.is_offscreen_left():
                 if self.to_be_deleted > 0: # we ditch this element if there are too many...
                     self.elements.remove(element)
                     self.to_be_deleted -= 1
@@ -87,8 +94,7 @@ class Field:
             if pygame.sprite.collide_circle(element, self.player):
                 pygame.event.post(pygame.event.Event(CST.PLAYER_HIT))
                 
-        # Adding new asteroids if size is greater
-        self.elements.extend([self.new_asteroid() for _ in range(self.size - len(self.elements))])
+        
 
 
 
