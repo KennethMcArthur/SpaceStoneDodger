@@ -40,8 +40,6 @@ def main():
 
     # This will be our actual main game loop
     while True:
-        clock.tick(CST.FPS) # this slows the loop to the defined speed
-
         test_event_counter += 1
 
         for event in pygame.event.get():
@@ -72,7 +70,7 @@ def main():
         if test_event_counter % 100 == 0:
             print("Repair state: ", player.get_repair_status())
         
-
+        clock.tick(CST.FPS) # this slows the loop to the defined speed
 
 
 if __name__ == "__main__":
