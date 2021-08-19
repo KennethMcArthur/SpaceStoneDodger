@@ -48,6 +48,7 @@ class Asteroid(pygame.sprite.Sprite):
 
 
     def mark_to_death(self) -> bool:
+        """ Sets an asteroid up for deletion, if it already wasn't """    
         if self.deathflag == False:
             self.deathflag = True
             return True
@@ -83,13 +84,15 @@ class Field:
         for _ in range(howmany):
             self.new_asteroid()
 
-    def random_position(self):
-        newx = CST.SCREEN_WIDTH * 1.5 + randint(0, 100)
+    def random_position(self) -> int:
+        """ returns a tuple of random x,y and speed """
+        newx = randint(CST.SCREEN_WIDTH, CST.SCREEN_WIDTH*2)
         newy = randint(0-Field.y_offset , CST.SCREEN_HEIGHT-Field.y_offset)
         newspeed = randint(self.min_speed, self.max_speed)
         return newx, newy, newspeed
 
     def new_asteroid(self) -> Asteroid:
+        """ returns a new asteroid at a random point of the spawn location """
         newx, newy, newspeed = self.random_position()
         return Asteroid(newx, newy, newspeed)
 
@@ -110,16 +113,17 @@ class Field:
 
 
     def game_tick_update(self, window: pygame.Surface) -> None:
-
+        """ Updates each asteroid """
         i = 0
         while i < len(Asteroid.asteroid_list):
-            if Asteroid.asteroid_list[i].game_tick_update(window): # if update was succesful (asteroid still alive)
-                if Asteroid.asteroid_list[i].is_offscreen_left():
+            this_ast = Asteroid.asteroid_list[i]
+            if this_ast.game_tick_update(window): # if update was succesful (asteroid still alive)
+                if this_ast.is_offscreen_left():
                     newx, newy, newspeed = self.random_position()
-                    Asteroid.asteroid_list[i].relocate(newx, newy, newspeed)
+                    this_ast.relocate(newx, newy, newspeed)
 
                 # Collisions checking
-                if pygame.sprite.collide_circle(Asteroid.asteroid_list[i], self.player):
+                if pygame.sprite.collide_circle(this_ast, self.player):
                     pygame.event.post(pygame.event.Event(CST.PLAYER_HIT))
 
                 i += 1
