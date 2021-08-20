@@ -12,10 +12,7 @@ import ssd_constants as CST
 class Asteroid(pygame.sprite.Sprite):
     """ Asteroid Class: a single asteroid object """
 
-    asteroid_list = []
-
     def __init__(self, x: int, y: int, speed: int) -> None:
-        Asteroid.asteroid_list.append(self)
         self.deathflag = False
         self.sprite_image = CST.ASTEROID_SPRITE
         self.radius = self.sprite_image.get_width() / 2
@@ -26,15 +23,16 @@ class Asteroid(pygame.sprite.Sprite):
 
 
     def relocate(self, x: int, y: int, speed: int) -> None:
-        """ Used to change the position and speed of a single asteroid """
-        self.x = x
-        self.y = y
-        self.speed = speed
+        """ Used to change the position and speed of a single asteroid NOT marked for death """
+        if self.deathflag == False:
+            self.x = x
+            self.y = y
+            self.speed = speed
 
 
     def game_tick_update(self, window: pygame.Surface) -> bool:
-        if self.is_offscreen_left() and self.deathflag:
-            Asteroid.asteroid_list.remove(self)
+        """ Returns False if the asteroid was bound to death. otherwise is updated regularly """
+        if self.deathflag and self.is_offscreen_left():
             return False
         self.x -= self.speed
         self.rect.x, self.rect.y = self.x, self.y
@@ -56,13 +54,6 @@ class Asteroid(pygame.sprite.Sprite):
             return False # already flagged for deletion
 
 
-    @staticmethod
-    def asteroids_still_alive() -> int:
-        """ returns the number of asteroids still not flagged for death """
-        return len([ast for ast in Asteroid.asteroid_list if ast.deathflag == False])
-
-   
-
 
 
 
@@ -81,8 +72,8 @@ class Field:
         self.player = player
         self.min_speed = 3
         self.max_speed = 8
-        for _ in range(howmany):
-            self.new_asteroid()
+        self.elements = [self.new_asteroid() for _ in range(howmany)]
+
 
     def random_position(self) -> int:
         """ returns a tuple of random x,y and speed """
@@ -91,32 +82,38 @@ class Field:
         newspeed = randint(self.min_speed, self.max_speed)
         return newx, newy, newspeed
 
+
     def new_asteroid(self) -> Asteroid:
         """ returns a new asteroid at a random point of the spawn location """
         newx, newy, newspeed = self.random_position()
         return Asteroid(newx, newy, newspeed)
 
 
+    def asteroids_still_alive(self) -> int:
+        """ returns the number of asteroids still not flagged for death """
+        return len([ast for ast in self.elements if ast.deathflag == False])
+
+
     def resize(self, newsize: int) -> None:
         """ Resizes the number of asteroids of the screen """
-        oldsize = Asteroid.asteroids_still_alive() # ignoring death-flagged asteroids
+        oldsize = self.asteroids_still_alive() # ignoring death-flagged asteroids
         if newsize < oldsize: # too much asteroids
             flagged = 0
             i = 0
             while flagged < oldsize - newsize:
-                outcome = Asteroid.asteroid_list[i].mark_to_death()
+                outcome = self.elements[i].mark_to_death()
                 flagged += outcome
-                i += outcome
+                i += 1
         elif oldsize < newsize: # need more asteroids
             for _ in range(newsize - oldsize):
-                self.new_asteroid()
+                self.elements.append(self.new_asteroid())
 
 
     def game_tick_update(self, window: pygame.Surface) -> None:
         """ Updates each asteroid """
         i = 0
-        while i < len(Asteroid.asteroid_list):
-            this_ast = Asteroid.asteroid_list[i]
+        while i < len(self.elements): 
+            this_ast = self.elements[i]
             if this_ast.game_tick_update(window): # if update was succesful (asteroid still alive)
                 if this_ast.is_offscreen_left():
                     newx, newy, newspeed = self.random_position()
@@ -127,6 +124,8 @@ class Field:
                     pygame.event.post(pygame.event.Event(CST.PLAYER_HIT))
 
                 i += 1
+            else: # the asteroid was marked for death
+                self.elements.pop(i)
 
 
 
@@ -150,7 +149,7 @@ if __name__ == "__main__":
 
     clock = pygame.time.Clock() # a clock object to slow the main loop
     
-    num_asteroids = 100
+    num_asteroids = 3
     dummyplayer = plr.Player_pawn(50,50)
     testfield = Field(num_asteroids, dummyplayer)
     testbg = bg.Background()
@@ -158,6 +157,8 @@ if __name__ == "__main__":
     updatelist = [] # Append order is draw order
     updatelist.append(testbg)
     updatelist.append(testfield)
+
+    test_counter = 1
 
     # This will be our actual main game loop
     while True:
@@ -177,3 +178,11 @@ if __name__ == "__main__":
             gameobj.game_tick_update(WIN) # All classes have this methods
 
         pygame.display.update()
+
+        if test_counter % (10*CST.FPS) == 0: # every 10 seconds
+            # stuff to test
+            
+            test_counter = 0
+
+
+        test_counter += 1
