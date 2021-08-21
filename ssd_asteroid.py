@@ -45,46 +45,39 @@ class Asteroid(pygame.sprite.Sprite):
 
 
 
-
-
-
-# This class is a "group manager" for asteroids
-class Field:
-    """
-    Asteroid Field class
-
-    Parameters:
-    -player: the player object, for collisions checking (player Class object)
-    """
-
-    def __init__(self, howmany: int, player) -> None:
-        self.player = player
-        self.min_speed = 3
-        self.max_speed = 8
+# New generic Field class
+class Field_of:
+    def __init__(self, of_what, howmany: int, spawn_parameters: dict) -> None:
+        self.base_element_class = of_what
+        self.spawn_parameters = spawn_parameters
         self.to_be_deleted = 0
-        self.elements = [self.new_asteroid() for _ in range(howmany)]
+        self.elements = [self.new_element() for _ in range(howmany)]
 
 
-    def random_position(self) -> int:
-        """ returns a tuple of random x,y and speed """
-        y_offset = Asteroid.HEIGHT // 2
-        newx = randint(CST.SCREEN_WIDTH, CST.SCREEN_WIDTH*2)
-        newy = randint(0 - y_offset , CST.SCREEN_HEIGHT - y_offset)
-        newspeed = randint(self.min_speed, self.max_speed)
+    def random_position(self, spwn_par: dict) -> int:
+        """ returns a tuple of random x,y inside the spawn zone and speed """
+        newx = randint(spwn_par.get("x_from", 0), spwn_par.get("x_to", 0))
+        newy = randint(spwn_par.get("y_from", 0), spwn_par.get("y_to", 0))
+        newspeed = randint(spwn_par.get("min_speed", 0), spwn_par.get("max_speed", 0))
         return newx, newy, newspeed
 
 
-    def new_asteroid(self) -> Asteroid:
+    def new_element(self):
         """ returns a new asteroid at a random point of the spawn location """
-        newx, newy, newspeed = self.random_position()
-        return Asteroid(newx, newy, newspeed)
+        newx, newy, newspeed = self.random_position(self.spawn_parameters)
+        return self.base_element_class(newx, newy, newspeed)
 
 
     def resize(self, newsize: int) -> None:
         """ Resizes the number of asteroids on the screen """
         self.to_be_deleted = max(0, len(self.elements) - newsize) # Compressed if
         # Adding new asteroids if size is greater
-        self.elements.extend([self.new_asteroid() for _ in range(newsize - len(self.elements))])
+        self.elements.extend([self.new_element() for _ in range(newsize - len(self.elements))])
+
+
+    def other_stuff_for_each(self, element):
+        """ Other functions to call for each element, aside from game_tick_update() """
+        pass
 
 
     def game_tick_update(self, window: pygame.Surface) -> None:
@@ -99,19 +92,37 @@ class Field:
                     self.to_be_deleted -= 1
                     continue
                 else:
-                    newx, newy, newspeed = self.random_position()
+                    newx, newy, newspeed = self.random_position(self.spawn_parameters)
                     element.relocate(newx, newy, newspeed)
 
             element.game_tick_update(window)
-
-            # Collisions checking
-            if pygame.sprite.collide_circle(element, self.player):
-                pygame.event.post(pygame.event.Event(CST.PLAYER_HIT))
+            self.other_stuff_for_each(element)
 
             i += 1
 
 
 
+class AsteroidField(Field_of):
+
+    def __init__(self, howmany, player):
+        self.player = player
+        self.Y_OFFSET = Asteroid.HEIGHT // 2
+        self.spawn_parameters = {
+            "x_from": CST.SCREEN_WIDTH,
+            "x_to": CST.SCREEN_WIDTH * 2,
+            "y_from": 0 - self.Y_OFFSET,
+            "y_to": CST.SCREEN_HEIGHT - self.Y_OFFSET,
+            "min_speed": 3,
+            "max_speed": 8
+        }
+        super().__init__(Asteroid, howmany, self.spawn_parameters)
+
+
+    def other_stuff_for_each(self, element):
+        """ Overriding from super() class to add collision checking """
+        # Collisions checking
+        if pygame.sprite.collide_circle(element, self.player):
+            pygame.event.post(pygame.event.Event(CST.PLAYER_HIT))
 
 
 
@@ -133,7 +144,7 @@ if __name__ == "__main__":
     
     num_asteroids = 30
     dummyplayer = plr.Player_pawn(50,50)
-    testfield = Field(num_asteroids, dummyplayer)
+    testfield = AsteroidField(num_asteroids, dummyplayer)
     testbg = bg.Background()
 
     updatelist = [] # Append order is draw order

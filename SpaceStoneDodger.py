@@ -27,7 +27,7 @@ def main():
     starfield = stf.Starfield(num_stars)
     player = plr.Player_pawn(50, CST.SCREEN_HEIGHT // 2)
     ui_lifebar = plr.Lifebar(player)
-    asteroid_field = ast.Field(num_asteroids, player)
+    asteroid_field = ast.AsteroidField(num_asteroids, player)
 
     updatelist = [] # Append order is draw order
     updatelist.append(level_background)
