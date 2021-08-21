@@ -25,14 +25,14 @@ class Asteroid(pygame.sprite.Sprite):
 
 
     def relocate(self, x: int, y: int, speed: int) -> None:
-        """ Used to change the position and speed of a single asteroid NOT marked for death """
+        """ Used to change the position and speed of a single asteroid """
         self.x = x
         self.y = y
         self.speed = speed
 
 
     def game_tick_update(self, window: pygame.Surface) -> None:
-        """ Returns False if the asteroid was bound to death. otherwise is updated regularly """
+        """ Moves the asteroid left """
         self.x -= self.speed
         self.rect.x, self.rect.y = self.x, self.y
         window.blit(Asteroid.SPRITE_IMAGE, (self.x, self.y))
@@ -81,7 +81,7 @@ class Field:
 
 
     def resize(self, newsize: int) -> None:
-        """ Resizes the number of asteroids of the screen """
+        """ Resizes the number of asteroids on the screen """
         self.to_be_deleted = max(0, len(self.elements) - newsize) # Compressed if
         # Adding new asteroids if size is greater
         self.elements.extend([self.new_asteroid() for _ in range(newsize - len(self.elements))])
