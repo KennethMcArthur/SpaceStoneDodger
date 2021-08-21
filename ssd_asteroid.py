@@ -12,46 +12,37 @@ import ssd_constants as CST
 class Asteroid(pygame.sprite.Sprite):
     """ Asteroid Class: a single asteroid object """
 
+    # Class constants
+    SPRITE_IMAGE = CST.ASTEROID_SPRITE
+    HEIGHT = SPRITE_IMAGE.get_height()
+    WIDTH = SPRITE_IMAGE.get_width()
+
+
     def __init__(self, x: int, y: int, speed: int) -> None:
-        self.deathflag = False
-        self.sprite_image = CST.ASTEROID_SPRITE
-        self.radius = self.sprite_image.get_width() / 2
-        self.height = self.sprite_image.get_height()
-        self.width = self.sprite_image.get_width()
-        self.rect = self.sprite_image.get_rect()
+        self.radius = Asteroid.WIDTH // 2
+        self.rect = Asteroid.SPRITE_IMAGE.get_rect()
         self.relocate(x, y, speed)
 
 
     def relocate(self, x: int, y: int, speed: int) -> None:
         """ Used to change the position and speed of a single asteroid NOT marked for death """
-        if self.deathflag == False:
-            self.x = x
-            self.y = y
-            self.speed = speed
+        self.x = x
+        self.y = y
+        self.speed = speed
 
 
-    def game_tick_update(self, window: pygame.Surface) -> bool:
+    def game_tick_update(self, window: pygame.Surface) -> None:
         """ Returns False if the asteroid was bound to death. otherwise is updated regularly """
-        if self.deathflag and self.is_offscreen_left():
-            return False
         self.x -= self.speed
         self.rect.x, self.rect.y = self.x, self.y
-        window.blit(self.sprite_image, (self.x, self.y))
-        return True
+        window.blit(Asteroid.SPRITE_IMAGE, (self.x, self.y))
 
 
     def is_offscreen_left(self) -> bool:
         """ Used to know if the asteroid is out of screen """
-        return self.x < (0 - self.width)
+        return self.x < (0 - Asteroid.WIDTH)
 
 
-    def mark_to_death(self) -> bool:
-        """ Sets an asteroid up for deletion, if it already wasn't """    
-        if self.deathflag == False:
-            self.deathflag = True
-            return True
-        else:
-            return False # already flagged for deletion
 
 
 
@@ -66,19 +57,19 @@ class Field:
     -player: the player object, for collisions checking (player Class object)
     """
 
-    y_offset = CST.ASTEROID_SPRITE.get_height() // 2
-
     def __init__(self, howmany: int, player) -> None:
         self.player = player
         self.min_speed = 3
         self.max_speed = 8
+        self.to_be_deleted = 0
         self.elements = [self.new_asteroid() for _ in range(howmany)]
 
 
     def random_position(self) -> int:
         """ returns a tuple of random x,y and speed """
+        y_offset = Asteroid.HEIGHT // 2
         newx = randint(CST.SCREEN_WIDTH, CST.SCREEN_WIDTH*2)
-        newy = randint(0-Field.y_offset , CST.SCREEN_HEIGHT-Field.y_offset)
+        newy = randint(0 - y_offset , CST.SCREEN_HEIGHT - y_offset)
         newspeed = randint(self.min_speed, self.max_speed)
         return newx, newy, newspeed
 
@@ -89,44 +80,35 @@ class Field:
         return Asteroid(newx, newy, newspeed)
 
 
-    def asteroids_still_alive(self) -> int:
-        """ returns the number of asteroids still not flagged for death """
-        return len([ast for ast in self.elements if ast.deathflag == False])
-
-
     def resize(self, newsize: int) -> None:
         """ Resizes the number of asteroids of the screen """
-        oldsize = self.asteroids_still_alive() # ignoring death-flagged asteroids
-        if newsize < oldsize: # too much asteroids
-            flagged = 0
-            i = 0
-            while flagged < oldsize - newsize:
-                outcome = self.elements[i].mark_to_death()
-                flagged += outcome
-                i += 1
-        elif oldsize < newsize: # need more asteroids
-            for _ in range(newsize - oldsize):
-                self.elements.append(self.new_asteroid())
+        self.to_be_deleted = max(0, len(self.elements) - newsize) # Compressed if
+        # Adding new asteroids if size is greater
+        self.elements.extend([self.new_asteroid() for _ in range(newsize - len(self.elements))])
 
 
     def game_tick_update(self, window: pygame.Surface) -> None:
         """ Updates each asteroid """
         i = 0
         while i < len(self.elements): 
-            this_ast = self.elements[i]
-            if this_ast.game_tick_update(window): # if update was succesful (asteroid still alive)
-                if this_ast.is_offscreen_left():
+            element = self.elements[i]
+
+            if element.is_offscreen_left():
+                if self.to_be_deleted > 0: # we ditch this element if there are too many...
+                    self.elements.pop(i)
+                    self.to_be_deleted -= 1
+                    continue
+                else:
                     newx, newy, newspeed = self.random_position()
-                    this_ast.relocate(newx, newy, newspeed)
+                    element.relocate(newx, newy, newspeed)
 
-                # Collisions checking
-                if pygame.sprite.collide_circle(this_ast, self.player):
-                    pygame.event.post(pygame.event.Event(CST.PLAYER_HIT))
+            element.game_tick_update(window)
 
-                i += 1
-            else: # the asteroid was marked for death
-                self.elements.pop(i)
+            # Collisions checking
+            if pygame.sprite.collide_circle(element, self.player):
+                pygame.event.post(pygame.event.Event(CST.PLAYER_HIT))
 
+            i += 1
 
 
 
@@ -149,7 +131,7 @@ if __name__ == "__main__":
 
     clock = pygame.time.Clock() # a clock object to slow the main loop
     
-    num_asteroids = 3
+    num_asteroids = 30
     dummyplayer = plr.Player_pawn(50,50)
     testfield = Field(num_asteroids, dummyplayer)
     testbg = bg.Background()
@@ -181,7 +163,10 @@ if __name__ == "__main__":
 
         if test_counter % (10*CST.FPS) == 0: # every 10 seconds
             # stuff to test
-            
+            new_asteroid_number = randint(0, 20)
+            print(f"Asteroids: {len(testfield.elements)}, new amount: {new_asteroid_number}")
+            testfield.resize(new_asteroid_number)
+
             test_counter = 0
 
 
