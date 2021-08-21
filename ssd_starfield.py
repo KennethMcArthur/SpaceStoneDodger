@@ -5,20 +5,21 @@
 import pygame
 from random import randint
 import ssd_constants as CST
-
+import ssd_field as fld
 
 
 
 class Star(pygame.sprite.Sprite):
     """ Single star object """
+    RADIUS = 1
 
-    def __init__(self, x: int, y: int, speed=CST.STARS_SPEED) -> None:
-        self.RADIUS = 1
-        self.COLOR = (125, 125, 125)
+    def __init__(self, x: int, y: int, speed: int) -> None:
+        grayshade = randint(50, 125) # Random grey shade to simulate different stars distances
+        self.COLOR = (grayshade, grayshade, grayshade)
         self.relocate(x, y, speed)
 
 
-    def relocate(self, x: int, y: int, speed=CST.STARS_SPEED) -> None:
+    def relocate(self, x: int, y: int, speed: int) -> None:
         """ Used to change the position and speed of a star asteroid """
         self.x = x
         self.y = y
@@ -27,48 +28,31 @@ class Star(pygame.sprite.Sprite):
 
     def game_tick_update(self, window) -> None:
         self.x -= self.speed
-        pygame.draw.circle(window, self.COLOR, (self.x, self.y), self.RADIUS)
-        
+        pygame.draw.circle(window, self.COLOR, (self.x, self.y), Star.RADIUS)
+    
+    
+    def is_offscreen_left(self) -> bool:
+        """ Used to know if the asteroid is out of screen """
+        return self.x < (0 - Star.RADIUS)
 
 
 
-# This class is a "group manager" for stars
-class Starfield:
-    """ Star field manager """
-    def __init__(self, howmany: int) -> None:
-        self.size = howmany
-        self.elements = [self.new_star() for _ in range(self.size)]
-        self.to_be_deleted = 0
+
+class Starfield(fld.Field_of):
+    def __init__(self, howmany: int):
+        self.spawn_parameters = {
+            "x_from": 0, # temporally set to 0 to have a full screen initial spawn
+            "x_to": CST.SCREEN_WIDTH * 2,
+            "y_from": 0,
+            "y_to": CST.SCREEN_HEIGHT,
+            "min_speed": CST.STARS_SPEED,
+            "max_speed": CST.STARS_SPEED
+        }
+        super().__init__(Star, howmany, self.spawn_parameters)
+        # After an initial full screen spawn, we set the spawn zone correctly
+        self.spawn_parameters["x_from"] = CST.SCREEN_WIDTH
 
 
-    def new_star(self) -> Star:
-        """ Internal function to create a new single star to populate the Field """
-        return Star(CST.SCREEN_WIDTH + randint(0, CST.SCREEN_WIDTH),
-                        randint(0, CST.SCREEN_HEIGHT))
-
-
-    def resize(self, newsize: int) -> None:
-        """ Resizes the number of stars of the screen. The Field acts accordingly """
-        self.size = newsize
-        self.to_be_deleted = max(0, len(self.elements) - self.size)
-
-
-    def game_tick_update(self, window) -> None:
-        # TRICK: iterating a COPY of the list allows safe resize of that list
-        for element in self.elements[:]:
-            if element.x < 0 - element.RADIUS*2: # if this element is off screen
-                if self.to_be_deleted > 0:
-                    self.elements.remove(element)
-                    self.to_be_deleted -= 1
-                    continue
-                else:
-                    newx = CST.SCREEN_WIDTH + 10
-                    newy = randint(0, CST.SCREEN_HEIGHT)
-                    element.relocate(newx, newy)
-            element.game_tick_update(window)
-                
-        # Inserting new stars if size is greater
-        self.elements.extend([self.new_star() for _ in range(self.size - len(self.elements))])
 
 
 
