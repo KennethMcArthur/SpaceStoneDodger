@@ -17,6 +17,7 @@ class Asteroid(pygame.sprite.Sprite):
     HEIGHT = SPRITE_IMAGE.get_height()
     WIDTH = SPRITE_IMAGE.get_width()
 
+    external_speed_modifier = 1
 
     def __init__(self, x: int, y: int, speed: int) -> None:
         self.radius = Asteroid.WIDTH // 2
@@ -33,7 +34,7 @@ class Asteroid(pygame.sprite.Sprite):
 
     def game_tick_update(self, window: pygame.Surface) -> None:
         """ Moves the asteroid left """
-        self.x -= self.speed
+        self.x -= self.speed * Asteroid.external_speed_modifier
         self.rect.x, self.rect.y = self.x, self.y
         window.blit(Asteroid.SPRITE_IMAGE, (self.x, self.y))
 
@@ -59,6 +60,17 @@ class AsteroidField(fld.Field_of):
         }
         super().__init__(Asteroid, howmany, self.spawn_parameters)
 
+
+    def handle_movement(self, keys_pressed: list) -> None:
+        """ Manages the speed modifier of the field based on key pressing """
+        speed_modifier = 1
+        if keys_pressed[pygame.K_a]: #left key
+            speed_modifier = 0.9
+        if keys_pressed[pygame.K_d]: #right key
+            speed_modifier = 1.1
+
+        Asteroid.external_speed_modifier = speed_modifier
+        
 
     def other_stuff_for_each(self, element):
         """ Overriding from super() class to add collision checking """

@@ -66,7 +66,7 @@ def main():
                 updatelist.remove(player)
 
         # Key press capturing
-        keys_pressed = pygame.key.get_pressed() # Gets a list of the key pressed        
+        keys_pressed = pygame.key.get_pressed() # Gets the bool state of all keyboard buttons
 
         # Frame stabilyzer
         while unprocessed >= FRAME_CAP:
@@ -78,6 +78,7 @@ def main():
             test_event_counter += 1
 
             player.handle_movement(keys_pressed)
+            asteroid_field.handle_movement(keys_pressed)
 
             # Drawing sequence
             for gameobj in updatelist:
