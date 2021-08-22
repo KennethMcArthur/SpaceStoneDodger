@@ -74,6 +74,7 @@ class AsteroidField(fld.Field_of):
 # TESTING AREA
 if __name__ == "__main__":
     import sys
+    import time as t
     import ssd_background as bg
     import ssd_player as plr
 
@@ -81,8 +82,6 @@ if __name__ == "__main__":
 
     WIN = pygame.display.set_mode((CST.SCREEN_WIDTH, CST.SCREEN_HEIGHT))
     pygame.display.set_caption("Test Field")
-
-    clock = pygame.time.Clock() # a clock object to slow the main loop
     
     num_asteroids = 30
     dummyplayer = plr.Player_pawn(50,50)
@@ -95,32 +94,32 @@ if __name__ == "__main__":
 
     test_counter = 1
 
-    # This will be our actual main game loop
+    FRAME_CAP = 1.0 / CST.FPS # How many millisecons needs to pass
+    time = t.time()
+    unprocessed = 0
+
     while True:
-        clock.tick(CST.FPS) # this slows the loop to the defined speed
+        can_render = False
+        time_2 = t.time()
+        passed = time_2 - time
+        unprocessed += passed
+        time = time_2
 
         for event in pygame.event.get():
             # Handling of quit event
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit() # ensures we quit the program
-            
-        # Key press capturing
-        keys_pressed = pygame.key.get_pressed() # Gets a list of the key pressed        
+        
+        while unprocessed >= FRAME_CAP:
+            unprocessed -= FRAME_CAP
+            can_render = True
 
-        # Drawing sequence
-        for gameobj in updatelist:
-            gameobj.game_tick_update(WIN) # All classes have this methods
-
-        pygame.display.update()
-
-        if test_counter % (10*CST.FPS) == 0: # every 10 seconds
-            # stuff to test
-            new_asteroid_number = randint(0, 20)
-            print(f"Asteroids: {len(testfield.elements)}, new amount: {new_asteroid_number}")
-            testfield.resize(new_asteroid_number)
-
-            test_counter = 0
+        if can_render:
+            # put everything inside here
+            # Drawing sequence
+            for gameobj in updatelist:
+                gameobj.game_tick_update(WIN) # All classes have this methods
 
 
-        test_counter += 1
+            pygame.display.update()
