@@ -55,8 +55,8 @@ class AsteroidField(fld.Field_of):
             "x_to": CST.SCREEN_WIDTH * 2,
             "y_from": 0 - self.Y_OFFSET,
             "y_to": CST.SCREEN_HEIGHT - self.Y_OFFSET,
-            "min_speed": 3,
-            "max_speed": 8
+            "min_speed": CST.ASTEROID_STARTING_MIN_SPEED,
+            "max_speed": CST.ASTEROID_STARTING_MAX_SPEED
         }
         super().__init__(Asteroid, howmany, self.spawn_parameters)
 
@@ -65,9 +65,9 @@ class AsteroidField(fld.Field_of):
         """ Manages the speed modifier of the field based on key pressing """
         speed_modifier = 1
         if keys_pressed[pygame.K_a]: #left key
-            speed_modifier = 0.9
+            speed_modifier = CST.ASTEROID_SPEED_MODIFIER_DECEL
         if keys_pressed[pygame.K_d]: #right key
-            speed_modifier = 1.1
+            speed_modifier = CST.ASTEROID_SPEED_MODIFIER_ACCEL
 
         Asteroid.external_speed_modifier = speed_modifier
         
