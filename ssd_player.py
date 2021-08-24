@@ -4,6 +4,7 @@
 
 import pygame
 import ssd_constants as CST
+from ssd_constants import pressed
 
 
 class Player_pawn(pygame.sprite.Sprite):
@@ -25,15 +26,15 @@ class Player_pawn(pygame.sprite.Sprite):
         self.repair_timer = self.REPAIR_TIME
 
 
-    def handle_movement(self, keys_pressed: list) -> None:
+    def handle_movement(self, k_pressed: list) -> None:
         """ Manages the movement of the player based on key pressing """
-        if keys_pressed[pygame.K_a] and self.x - self.SHIP_SPEED > 0: #left key
+        if pressed("LEFT", k_pressed) and self.x - self.SHIP_SPEED > 0:
             self.x -= self.SHIP_SPEED
-        if keys_pressed[pygame.K_d] and self.x + self.SHIP_SPEED + self.width < CST.SCREEN_WIDTH: #right key
+        if pressed("RIGHT", k_pressed) and self.x + self.SHIP_SPEED + self.width < CST.SCREEN_WIDTH:
             self.x += self.SHIP_SPEED
-        if keys_pressed[pygame.K_w] and self.y - self.SHIP_SPEED > 0: #up key
+        if pressed("UP", k_pressed) and self.y - self.SHIP_SPEED > 0:
             self.y -= self.SHIP_SPEED
-        if keys_pressed[pygame.K_s] and self.y + self.SHIP_SPEED + self.height < CST.SCREEN_HEIGHT: #down key
+        if pressed("DOWN", k_pressed) and self.y + self.SHIP_SPEED + self.height < CST.SCREEN_HEIGHT:
             self.y += self.SHIP_SPEED
 
 
