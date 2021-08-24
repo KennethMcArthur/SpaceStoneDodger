@@ -23,11 +23,19 @@ def load_image(asset_folder: str, filename: str) -> pygame.Surface:
 # Game Parameters
 FPS = 60
 SCREEN_WIDTH, SCREEN_HEIGHT = 900, 500
+
 STARS_SPEED = 2
+STAR_SPRITE_RADIUS = 1
+
 ASTEROID_STARTING_MIN_SPEED = 3
 ASTEROID_STARTING_MAX_SPEED = 8
 ASTEROID_SPEED_MODIFIER_DECEL = 0.9
 ASTEROID_SPEED_MODIFIER_ACCEL = 1.1
+
+PLAYER_SHIP_SPEED = 5 # in PIXELS
+PLAYER_STARTING_MAX_HEALTH = 3 # in PIXELS
+PLAYER_REPAIR_TIME = 5 # how many SECONDS the player's ship takes for fully repairing
+PLAYER_INVULNERABILITY_DURATION = 3 # how many SECONDS the player's ship invulnerability lasts
 
 
 # Assets Constants

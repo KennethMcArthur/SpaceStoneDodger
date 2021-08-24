@@ -11,7 +11,7 @@ import ssd_field as fld
 
 class Star(pygame.sprite.Sprite):
     """ Single star object """
-    RADIUS = 1
+    RADIUS = CST.STAR_SPRITE_RADIUS
 
     def __init__(self, x: int, y: int, speed: int) -> None:
         grayshade = randint(50, 125) # Random grey shade to simulate different stars distances

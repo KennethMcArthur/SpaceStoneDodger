@@ -17,11 +17,11 @@ class Player_pawn(pygame.sprite.Sprite):
         self.width = self.sprite_image.get_width()
         self.radius = self.sprite_image.get_width() / 2
         self.rect = self.sprite_image.get_rect()
-        self.SHIP_SPEED = 5
-        self.health = 3
-        self.max_health = 3
+        self.SHIP_SPEED = CST.PLAYER_SHIP_SPEED
+        self.health = CST.PLAYER_STARTING_MAX_HEALTH
+        self.max_health = CST.PLAYER_STARTING_MAX_HEALTH
         self.invul_timer = 0
-        self.REPAIR_TIME = 5 * CST.FPS # Frames required to gain 1 life
+        self.REPAIR_TIME = CST.PLAYER_REPAIR_TIME * CST.FPS # Frames required to gain 1 life
         self.repair_timer = self.REPAIR_TIME
 
 
@@ -42,7 +42,7 @@ class Player_pawn(pygame.sprite.Sprite):
         if self.invul_timer == 0:
             self.health -= 1
             if self.health == 0: pygame.event.post(pygame.event.Event(game_over_event))
-            self.invul_timer = 3 * CST.FPS
+            self.invul_timer = CST.PLAYER_INVULNERABILITY_DURATION * CST.FPS
             self.repair_timer = self.REPAIR_TIME # Resetting repair state upon hit
 
 
