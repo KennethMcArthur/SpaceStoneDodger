@@ -17,6 +17,12 @@ def load_image(asset_folder: str, filename: str) -> pygame.Surface:
         raise SystemExit(message)
 
 
+def pressed(direction: tuple, pressed_key: list):
+    """ Returns if one of the corresponding key of a direction is been pressed """
+    return any( (pressed_key[binding] for binding in KEYBINDINGS[direction]) )
+
+
+
 # CONSTANTS LIST
 # --------------
 
@@ -36,6 +42,27 @@ PLAYER_SHIP_SPEED = 5 # in PIXELS
 PLAYER_STARTING_MAX_HEALTH = 3 # in PIXELS
 PLAYER_REPAIR_TIME = 5 # how many SECONDS the player's ship takes for fully repairing
 PLAYER_INVULNERABILITY_DURATION = 3 # how many SECONDS the player's ship invulnerability lasts
+
+
+# Key Bindings
+KEYBINDINGS = {
+    "UP": (
+        pygame.K_w,
+        pygame.K_UP
+    ),
+    "DOWN": (
+        pygame.K_s,
+        pygame.K_DOWN
+    ),
+    "LEFT": (
+        pygame.K_a,
+        pygame.K_LEFT
+    ),
+    "RIGHT": (
+        pygame.K_d,
+        pygame.K_RIGHT
+    )
+}
 
 
 # Assets Constants
