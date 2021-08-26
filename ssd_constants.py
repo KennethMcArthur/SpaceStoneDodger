@@ -17,7 +17,7 @@ def load_image(asset_folder: str, filename: str) -> pygame.Surface:
         raise SystemExit(message)
 
 
-def pressed(direction: tuple, pressed_key: list):
+def pressed(direction: str, pressed_key: list) -> bool:
     """ Returns if one of the corresponding key of a direction is been pressed """
     return any( (pressed_key[binding] for binding in KEYBINDINGS[direction]) )
 
