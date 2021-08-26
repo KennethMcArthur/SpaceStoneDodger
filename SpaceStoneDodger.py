@@ -12,6 +12,7 @@ import ssd_player as plr
 import ssd_asteroid as ast
 import ssd_starfield as stf
 import ssd_background as bg
+import ssd_powerup as pwr
 
 
 pygame.init()
@@ -24,7 +25,8 @@ def main():
     pygame.display.set_caption("Space Stone Dodger!")
 
     FRAME_CAP = 1.0 / CST.FPS # How many millisecons needs to pass each frame
-    
+
+    num_power_ups = 1    
     num_asteroids = 5
     num_stars = 15
 
@@ -33,9 +35,11 @@ def main():
     player = plr.Player_pawn(50, CST.SCREEN_HEIGHT // 2)
     ui_lifebar = plr.Lifebar(player)
     asteroid_field = ast.AsteroidField(num_asteroids, player)
+    powerup_field = pwr.PowerUpField(num_power_ups, player)
 
     updatelist = [] # Append order is draw order
     updatelist.append(level_background)
+    updatelist.append(powerup_field)
     updatelist.append(starfield)
     updatelist.append(player)
     updatelist.append(asteroid_field)
@@ -64,6 +68,8 @@ def main():
                 player.got_hit(CST.PLAYER_DEAD)
             if event.type == CST.PLAYER_DEAD:
                 updatelist.remove(player)
+            if event.type == CST.POWER_UP_COLLECTED:
+                print("Power Up collected!") # Here we should totally do something more useful
 
         # Key state capturing
         keys_pressed = pygame.key.get_pressed() # Gets the bool state of all keyboard buttons
