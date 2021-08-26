@@ -5,6 +5,7 @@
 import pygame
 from random import randint
 import ssd_constants as CST
+from ssd_constants import pressed
 import ssd_field as fld
 
 
@@ -64,9 +65,9 @@ class AsteroidField(fld.Field_of):
     def handle_movement(self, keys_pressed: list) -> None:
         """ Manages the speed modifier of the field based on key pressing """
         speed_modifier = 1
-        if keys_pressed[pygame.K_a]: #left key
+        if pressed("LEFT", keys_pressed): #left key
             speed_modifier = CST.ASTEROID_SPEED_MODIFIER_DECEL
-        if keys_pressed[pygame.K_d]: #right key
+        if pressed("RIGHT", keys_pressed): #right key
             speed_modifier = CST.ASTEROID_SPEED_MODIFIER_ACCEL
 
         Asteroid.external_speed_modifier = speed_modifier
