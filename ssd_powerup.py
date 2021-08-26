@@ -14,7 +14,7 @@ class PowerUp(pygame.sprite.Sprite):
     """ PowerUp Class: a single power up object """
 
     # Class constants
-    SPRITE_IMAGE = CST.ASTEROID_SPRITE
+    SPRITE_IMAGE = CST.METAL_SCRAP_SPRITE
     HEIGHT = SPRITE_IMAGE.get_height()
     WIDTH = SPRITE_IMAGE.get_width()
 
@@ -56,8 +56,8 @@ class PowerUpField(fld.Field_of):
             "x_to": CST.SCREEN_WIDTH * 2,
             "y_from": 0 - self.Y_OFFSET,
             "y_to": CST.SCREEN_HEIGHT - self.Y_OFFSET,
-            "min_speed": CST.ASTEROID_STARTING_MIN_SPEED,
-            "max_speed": CST.ASTEROID_STARTING_MAX_SPEED
+            "min_speed": CST.POWER_UP_SPEED,
+            "max_speed": CST.POWER_UP_SPEED
         }
         super().__init__(PowerUp, howmany, self.spawn_parameters)
 
@@ -66,9 +66,9 @@ class PowerUpField(fld.Field_of):
         """ Manages the speed modifier of the field based on key pressing """
         speed_modifier = 1
         if pressed("LEFT", keys_pressed): #left key
-            speed_modifier = CST.ASTEROID_SPEED_MODIFIER_DECEL
+            speed_modifier = CST.POWER_UP_SPEED_MODIFIER_DECEL
         if pressed("RIGHT", keys_pressed): #right key
-            speed_modifier = CST.ASTEROID_SPEED_MODIFIER_ACCEL
+            speed_modifier = CST.POWER_UP_SPEED_MODIFIER_ACCEL
 
         PowerUp.external_speed_modifier = speed_modifier
         
@@ -77,7 +77,8 @@ class PowerUpField(fld.Field_of):
         """ Overriding from super() class to add collision checking """
         # Collisions checking
         if pygame.sprite.collide_circle(element, self.player):
-            pygame.event.post(pygame.event.Event(CST.PLAYER_HIT))
+            pygame.event.post(pygame.event.Event(CST.POWER_UP_COLLECTED))
+            self.elements.remove(element) # PowerUps collected are removed
 
 
 
