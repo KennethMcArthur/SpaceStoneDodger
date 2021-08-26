@@ -59,13 +59,13 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit() # ensures we quit the program
-            
+                
             if event.type == CST.PLAYER_HIT:
                 player.got_hit(CST.PLAYER_DEAD)
             if event.type == CST.PLAYER_DEAD:
                 updatelist.remove(player)
 
-        # Key press capturing
+        # Key state capturing
         keys_pressed = pygame.key.get_pressed() # Gets the bool state of all keyboard buttons
 
         # Frame stabilyzer
