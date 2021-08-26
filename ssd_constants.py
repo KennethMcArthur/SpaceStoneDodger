@@ -43,6 +43,10 @@ PLAYER_STARTING_MAX_HEALTH = 3 # in PIXELS
 PLAYER_REPAIR_TIME = 5 # how many SECONDS the player's ship takes for fully repairing
 PLAYER_INVULNERABILITY_DURATION = 3 # how many SECONDS the player's ship invulnerability lasts
 
+POWER_UP_SPEED = 2
+POWER_UP_SPEED_MODIFIER_DECEL = 0.9
+POWER_UP_SPEED_MODIFIER_ACCEL = 1.1
+
 
 # Key Bindings
 KEYBINDINGS = {
@@ -69,12 +73,14 @@ KEYBINDINGS = {
 ASSET_DIR = "assets"
 SHIP_SPRITE = load_image(ASSET_DIR, "Ship.png")
 ASTEROID_SPRITE = load_image(ASSET_DIR, "asteroid.png")
-SPACE_BG = load_image(ASSET_DIR, 'bg_blurry.jpg')
+SPACE_BG = load_image(ASSET_DIR, "bg_blurry.jpg")
+METAL_SCRAP_SPRITE = load_image(ASSET_DIR, "metal_scrap2.png")
 
 
 # Custom Pygame Events
 PLAYER_HIT = pygame.USEREVENT + 1
 PLAYER_DEAD = pygame.USEREVENT + 2
+POWER_UP_COLLECTED = pygame.USEREVENT + 3
 
 
 
