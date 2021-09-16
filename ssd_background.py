@@ -1,6 +1,6 @@
 # pylint: disable=no-member
 
-# SpaceStoneDodger: Background Classe
+# SpaceStoneDodger: Background Class
 
 import pygame
 import ssd_constants as CST
