@@ -97,23 +97,25 @@ def game_level(WIN: pygame.Surface) -> bool:
 
     return False
 
-def game_menu(WIN: pygame.Surface) -> None:
 
-    seconds = 10
+
+def game_menu(WIN: pygame.Surface) -> None:
 
     TITLE_COORDS = (CST.SCREEN_WIDTH // 2, CST.SCREEN_HEIGHT * 0.2)
     BOTTOM_TEXT_COORDS = (CST.SCREEN_WIDTH // 2, CST.SCREEN_HEIGHT * 0.9)
     KEYS_TEXT_COORDS = (CST.SCREEN_WIDTH // 2, CST.SCREEN_HEIGHT * 0.7)
 
     level_background = bg.Background()
+    starfield = stf.Starfield(15)
     player = plr.Player_pawn(CST.SCREEN_WIDTH // 2, CST.SCREEN_HEIGHT // 2)
     text_title = txt.StaticText("Space Stone Dodger", 48, TITLE_COORDS)
     text_keys = txt.StaticText("Move with W,A,S,D", 32, KEYS_TEXT_COORDS)
-    text_bottom = txt.StaticText("Game starting in 10 seconds", 24, BOTTOM_TEXT_COORDS)
+    text_bottom = txt.StaticText("(press [SPACE] to begin)", 24, BOTTOM_TEXT_COORDS)
     
 
     updatelist = [] # Append order is draw order
     updatelist.append(level_background)
+    updatelist.append(starfield)
     updatelist.append(player)
     updatelist.append(text_title)
     updatelist.append(text_keys)
@@ -152,29 +154,30 @@ def game_menu(WIN: pygame.Surface) -> None:
             frame_counter += 1
 
             player.handle_movement(keys_pressed)
+            if keys_pressed[pygame.K_SPACE]:
+                return
 
             # Drawing sequence
             for gameobj in updatelist:
                 gameobj.game_tick_update(WIN) # All classes have this methods
             pygame.display.update()
 
+            """
             if frame_counter % (1*CST.FPS) == 0: # every second
-                seconds -= 1
-                text_bottom.set_text("Game starting in " + str(seconds) + " seconds")
                 frame_counter = 0
-                if seconds == 0: return # Moving on to next Scene
+                # do other stuff
+                """
+
 
 
 def game_losing_screen(WIN: pygame.Surface) -> None:
-
-    seconds = 5
 
     TITLE_COORDS = (CST.SCREEN_WIDTH // 2, CST.SCREEN_HEIGHT // 2)
     BOTTOM_TEXT_COORDS = (CST.SCREEN_WIDTH // 2, CST.SCREEN_HEIGHT * 0.9)
 
     level_background = bg.Background()
     text_title = txt.StaticText("Sadly, stones Won", 48, TITLE_COORDS)
-    text_bottom = txt.StaticText("Game Menu in 5 seconds", 20, BOTTOM_TEXT_COORDS)
+    text_bottom = txt.StaticText("(press [space] to play again)", 20, BOTTOM_TEXT_COORDS)
     
 
     updatelist = [] # Append order is draw order
@@ -202,7 +205,7 @@ def game_losing_screen(WIN: pygame.Surface) -> None:
                 sys.exit() # ensures we quit the program
                 
         # Key state capturing
-        #keys_pressed = pygame.key.get_pressed() # Gets the bool state of all keyboard buttons
+        keys_pressed = pygame.key.get_pressed() # Gets the bool state of all keyboard buttons
 
         # Frame stabilyzer
         while unprocessed >= FRAME_CAP:
@@ -213,16 +216,19 @@ def game_losing_screen(WIN: pygame.Surface) -> None:
         if can_render:
             frame_counter += 1
 
+            if keys_pressed[pygame.K_SPACE]:
+                return
+
             # Drawing sequence
             for gameobj in updatelist:
                 gameobj.game_tick_update(WIN) # All classes have this methods
             pygame.display.update()
 
+            """
             if frame_counter % (1*CST.FPS) == 0: # every second
-                seconds -= 1
-                text_bottom.set_text("Game Menu in " + str(seconds) + " seconds")
                 frame_counter = 0
-                if seconds == 0: return # Moving on to next Scene    
+                # do stuff
+            """
 
 
 
