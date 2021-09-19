@@ -9,8 +9,9 @@ import ssd_constants as CST
 
 
 class StaticText:
-    """ Class for centered text """
-    def __init__(self, text: str, size: int, position: tuple) -> None:
+    """ Class for text """
+    def __init__(self, text: str, size: int, position: tuple, alignment: int = 0) -> None:
+        self.alignment = alignment # Default is left
         self.pos_x, self.pos_y = position
         self.titlefont = pygame.font.Font(CST.TITLE_FONT, size)
         self.set_text(text)
@@ -18,12 +19,17 @@ class StaticText:
     def set_text(self, new_text: str) -> None:
         """ Updates the text """
         self.titletext = self.titlefont.render(new_text, True, CST.COLOR_WHITE)
-        self.center_me()
+        self.place_me()
 
-    def center_me(self):
-        """ Properly centers the text """
+    def place_me(self):
+        """ Places the text at the proper coords based on alignment """
         self.titlerect = self.titletext.get_rect()
-        self.titlerect.center = (self.pos_x, self.pos_y)
+        if self.alignment == CST.TXT.LEFT:
+            self.titlerect.topleft = (self.pos_x, self.pos_y)
+        elif self.alignment == CST.TXT.CENTER:
+            self.titlerect.center = (self.pos_x, self.pos_y)
+        elif self.alignment == CST.TXT.RIGHT:
+            self.titlerect.topright = (self.pos_x, self.pos_y)
 
     def game_tick_update(self, window: pygame.Surface) -> None:
         window.blit(self.titletext, self.titlerect)
@@ -43,7 +49,7 @@ class AnimatedTypedText:
         self.titlerect = self.titletext.get_rect()
         self.titlerect = self.titlerect.move(self.pos_x, self.pos_y)
 
-        self.speed = speed
+        self.speed = min(speed, CST.FPS) # Cannot have a speed greater than FPS
         self.speed_break_point = CST.FPS // speed
 
         self.total_text = text
@@ -81,13 +87,17 @@ if __name__ == "__main__":
     pygame.display.set_caption("Test Field")
     
     testbg = bg.Background()
-    dummy_static_text = StaticText("Testo Statico", 32, (CST.SCREEN_WIDTH//2, 100))
-    dummy_animated_text = AnimatedTypedText("Testo animato molto bene, davvero", 12, (50, 300), 30)
+    dummy_static_text = StaticText("Center", 32, (CST.SCREEN_WIDTH//2, 100), CST.TXT.CENTER)
+    dummy_left_text = StaticText("Left", 32, (50, 50), CST.TXT.LEFT)
+    dummy_right_text = StaticText("Right", 32, (CST.SCREEN_WIDTH-50, 150), CST.TXT.RIGHT)
+    dummy_animated_text = AnimatedTypedText("This is an animated text, it should appear one letter at time", 12, (50, 300), 20)
 
 
     updatelist = [] # Append order is draw order
     updatelist.append(testbg)
     updatelist.append(dummy_static_text)
+    updatelist.append(dummy_left_text)
+    updatelist.append(dummy_right_text)
     updatelist.append(dummy_animated_text)
 
     test_counter = 1

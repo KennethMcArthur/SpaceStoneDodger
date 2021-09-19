@@ -23,7 +23,7 @@ def game_level(WIN: pygame.Surface) -> bool:
 
     FRAME_CAP = 1.0 / CST.FPS # How many millisecons needs to pass each frame
 
-    num_power_ups = 1    
+    num_power_ups = 3
     num_asteroids = 5
     num_stars = 15
 
@@ -92,7 +92,6 @@ def game_level(WIN: pygame.Surface) -> bool:
             if frame_counter % (5*CST.FPS) == 0: # Every 5 seconds
                 num_asteroids += 1
                 asteroid_field.resize(num_asteroids)
-                print("Asteroids: ", num_asteroids)
                 frame_counter = 0
 
 
@@ -106,9 +105,9 @@ def game_menu(WIN: pygame.Surface) -> None:
     level_background = bg.Background()
     starfield = stf.Starfield(15)
     player = plr.Player_pawn(CST.SCREEN_WIDTH // 2, CST.SCREEN_HEIGHT // 2)
-    text_title = txt.StaticText("Space Stone Dodger", 48, TITLE_COORDS)
-    text_keys = txt.StaticText("Move with W,A,S,D", 32, KEYS_TEXT_COORDS)
-    text_bottom = txt.StaticText("(press [SPACE] to begin)", 24, BOTTOM_TEXT_COORDS)
+    text_title = txt.StaticText("Space Stone Dodger", 48, TITLE_COORDS, CST.TXT.CENTER)
+    text_keys = txt.StaticText("Move with W,A,S,D", 32, KEYS_TEXT_COORDS, CST.TXT.CENTER)
+    text_bottom = txt.StaticText("(press [SPACE] to begin)", 24, BOTTOM_TEXT_COORDS, CST.TXT.CENTER)
     
 
     updatelist = [] # Append order is draw order
@@ -174,8 +173,8 @@ def game_losing_screen(WIN: pygame.Surface) -> None:
     BOTTOM_TEXT_COORDS = (CST.SCREEN_WIDTH // 2, CST.SCREEN_HEIGHT * 0.9)
 
     level_background = bg.Background()
-    text_title = txt.StaticText("Sadly, stones Won", 48, TITLE_COORDS)
-    text_bottom = txt.StaticText("(press [SPACE] to play again)", 20, BOTTOM_TEXT_COORDS)
+    text_title = txt.StaticText("Sadly, stones Won", 48, TITLE_COORDS, CST.TXT.CENTER)
+    text_bottom = txt.StaticText("(press [SPACE] to play again)", 20, BOTTOM_TEXT_COORDS, CST.TXT.CENTER)
     
 
     updatelist = [] # Append order is draw order
