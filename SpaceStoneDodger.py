@@ -65,7 +65,7 @@ def game_level(WIN: pygame.Surface) -> bool:
                 player.got_hit(CST.PLAYER_DEAD)
             if event.type == CST.PLAYER_DEAD:
                 updatelist.remove(player)
-                return True # Returning True on player death
+                return CST.SCENES.GAME_LOSING_SCREEN
             if event.type == CST.POWER_UP_COLLECTED:
                 print("Power Up collected!") # Here we should totally do something more useful
 
@@ -94,8 +94,6 @@ def game_level(WIN: pygame.Surface) -> bool:
                 asteroid_field.resize(num_asteroids)
                 print("Asteroids: ", num_asteroids)
                 frame_counter = 0
-
-    return False
 
 
 
@@ -154,8 +152,8 @@ def game_menu(WIN: pygame.Surface) -> None:
             frame_counter += 1
 
             player.handle_movement(keys_pressed)
-            if keys_pressed[pygame.K_SPACE]:
-                return
+            if CST.pressed("SPACE", keys_pressed):
+                return CST.SCENES.GAME_LEVEL
 
             # Drawing sequence
             for gameobj in updatelist:
@@ -177,7 +175,7 @@ def game_losing_screen(WIN: pygame.Surface) -> None:
 
     level_background = bg.Background()
     text_title = txt.StaticText("Sadly, stones Won", 48, TITLE_COORDS)
-    text_bottom = txt.StaticText("(press [space] to play again)", 20, BOTTOM_TEXT_COORDS)
+    text_bottom = txt.StaticText("(press [SPACE] to play again)", 20, BOTTOM_TEXT_COORDS)
     
 
     updatelist = [] # Append order is draw order
@@ -216,8 +214,8 @@ def game_losing_screen(WIN: pygame.Surface) -> None:
         if can_render:
             frame_counter += 1
 
-            if keys_pressed[pygame.K_SPACE]:
-                return
+            if CST.pressed("SPACE", keys_pressed):
+                return CST.SCENES.GAME_LEVEL
 
             # Drawing sequence
             for gameobj in updatelist:
@@ -239,12 +237,18 @@ def main_game():
     WIN = pygame.display.set_mode((CST.SCREEN_WIDTH, CST.SCREEN_HEIGHT))
     pygame.display.set_caption("Space Stone Dodger!")
 
-    # Scene order
+    scenelist = [
+        game_menu,
+        game_level,
+        game_losing_screen,
+    ]
+
+    next_scene = 0
+
+    # Scene sequence, each scene returns the index for the next one
     while True:
-        game_menu(WIN)
-        player_lose = game_level(WIN)
-        if player_lose:
-            game_losing_screen(WIN)
+        next_scene = scenelist[next_scene](WIN)
+
 
 
 
