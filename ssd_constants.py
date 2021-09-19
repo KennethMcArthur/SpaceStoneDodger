@@ -65,7 +65,10 @@ KEYBINDINGS = {
     "RIGHT": (
         pygame.K_d,
         pygame.K_RIGHT
-    )
+    ),
+    "SPACE": (
+        pygame.K_SPACE,
+    ),
 }
 
 
@@ -77,6 +80,7 @@ SPACE_BG = load_image(ASSET_DIR, "bg_blurry.jpg")
 METAL_SCRAP_SPRITE = load_image(ASSET_DIR, "metal_scrap2.png")
 TITLE_FONT = os.path.join(ASSET_DIR, "kongtext.ttf") # Font by codeman38 | cody@zone38.net | http://www.zone38.net/
 
+
 # Custom Pygame Events
 PLAYER_HIT = pygame.USEREVENT + 1
 PLAYER_DEAD = pygame.USEREVENT + 2
@@ -85,3 +89,11 @@ POWER_UP_COLLECTED = pygame.USEREVENT + 3
 
 # Colors
 COLOR_WHITE = (255, 255, 255)
+
+
+# Scenes
+class SCENES:
+    """ Object that groups all scenes """
+    GAME_MENU = 0
+    GAME_LEVEL = 1
+    GAME_LOSING_SCREEN = 2
