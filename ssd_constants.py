@@ -97,3 +97,10 @@ class SCENES:
     GAME_MENU = 0
     GAME_LEVEL = 1
     GAME_LOSING_SCREEN = 2
+
+
+# Text alignment
+class TXT:
+    LEFT = 0
+    CENTER = 1
+    RIGHT = 2
