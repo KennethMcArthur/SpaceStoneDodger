@@ -14,219 +14,98 @@ import ssd_starfield as stf
 import ssd_background as bg
 import ssd_powerup as pwr
 import ssd_text_classes as txt
+import ssd_scene_master_class as Scn
 
 pygame.init()
 
 
 
-def game_level(WIN: pygame.Surface) -> bool:
 
-    FRAME_CAP = 1.0 / CST.FPS # How many millisecons needs to pass each frame
+class GameMenu(Scn.Scene):
+    def scene_related_init(self):
+        TITLE_COORDS = (CST.SCREEN_WIDTH // 2, CST.SCREEN_HEIGHT * 0.2)
+        BOTTOM_TEXT_COORDS = (CST.SCREEN_WIDTH // 2, CST.SCREEN_HEIGHT * 0.9)
+        KEYS_TEXT_COORDS = (CST.SCREEN_WIDTH // 2, CST.SCREEN_HEIGHT * 0.7)
 
-    num_power_ups = 3
-    num_asteroids = 5
-    num_stars = 15
+        self.level_background = bg.Background()
+        self.starfield = stf.Starfield(15)
+        self.player = plr.Player_pawn(CST.SCREEN_WIDTH // 2, CST.SCREEN_HEIGHT // 2)
+        self.text_title = txt.StaticText("Space Stone Dodger", 48, TITLE_COORDS, CST.TXT.CENTER)
+        self.text_keys = txt.StaticText("Move with W,A,S,D", 32, KEYS_TEXT_COORDS, CST.TXT.CENTER)
+        self.text_bottom = txt.StaticText("(press [SPACE] to begin)", 24, BOTTOM_TEXT_COORDS, CST.TXT.CENTER)
+        
+        # Append order is draw order
+        self.updatelist.append(self.level_background)
+        self.updatelist.append(self.starfield)
+        self.updatelist.append(self.player)
+        self.updatelist.append(self.text_title)
+        self.updatelist.append(self.text_keys)
+        self.updatelist.append(self.text_bottom)
 
-    level_background = bg.Background()
-    starfield = stf.Starfield(num_stars)
-    player = plr.Player_pawn(50, CST.SCREEN_HEIGHT // 2)
-    ui_lifebar = plr.Lifebar(player)
-    asteroid_field = ast.AsteroidField(num_asteroids, player)
-    powerup_field = pwr.PowerUpField(num_power_ups, player)
-
-    updatelist = [] # Append order is draw order
-    updatelist.append(level_background)
-    updatelist.append(powerup_field)
-    updatelist.append(starfield)
-    updatelist.append(player)
-    updatelist.append(asteroid_field)
-    updatelist.append(ui_lifebar)
-
-    frame_counter = 0
-
-    time = t.time()
-    unprocessed = 0
-
-    # Main game loop
-    while True:
-        can_render = False
-        time_2 = t.time()
-        passed = time_2 - time
-        unprocessed += passed
-        time = time_2
-
-        for event in pygame.event.get():
-            # Handling of quit event
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit() # ensures we quit the program
-                
-            if event.type == CST.PLAYER_HIT:
-                player.got_hit(CST.PLAYER_DEAD)
-            if event.type == CST.PLAYER_DEAD:
-                updatelist.remove(player)
-                return CST.SCENES.GAME_LOSING_SCREEN
-            if event.type == CST.POWER_UP_COLLECTED:
-                print("Power Up collected!") # Here we should totally do something more useful
-
-        # Key state capturing
-        keys_pressed = pygame.key.get_pressed() # Gets the bool state of all keyboard buttons
-
-        # Frame stabilyzer
-        while unprocessed >= FRAME_CAP:
-            unprocessed -= FRAME_CAP
-            can_render = True
-
-        # What happens each frame
-        if can_render:
-            frame_counter += 1
-
-            player.handle_movement(keys_pressed)
-            asteroid_field.handle_movement(keys_pressed)
-
-            # Drawing sequence
-            for gameobj in updatelist:
-                gameobj.game_tick_update(WIN) # All classes have this methods
-            pygame.display.update()
-
-            if frame_counter % (5*CST.FPS) == 0: # Every 5 seconds
-                num_asteroids += 1
-                asteroid_field.resize(num_asteroids)
-                frame_counter = 0
+    def keys_to_check(self, key_list: list):
+        self.player.handle_movement(key_list)
+        if CST.pressed("SPACE", key_list):
+            self.quit_loop(CST.SCENES.GAME_LEVEL)
 
 
 
-def game_menu(WIN: pygame.Surface) -> None:
+class GameLevel(Scn.Scene):
+    def scene_related_init(self):
+        self.num_power_ups = 3
+        self.num_asteroids = 5
+        self.num_stars = 15
 
-    TITLE_COORDS = (CST.SCREEN_WIDTH // 2, CST.SCREEN_HEIGHT * 0.2)
-    BOTTOM_TEXT_COORDS = (CST.SCREEN_WIDTH // 2, CST.SCREEN_HEIGHT * 0.9)
-    KEYS_TEXT_COORDS = (CST.SCREEN_WIDTH // 2, CST.SCREEN_HEIGHT * 0.7)
+        self.level_background = bg.Background()
+        self.starfield = stf.Starfield(self.num_stars)
+        self.player = plr.Player_pawn(50, CST.SCREEN_HEIGHT // 2)
+        self.ui_lifebar = plr.Lifebar(self.player)
+        self.asteroid_field = ast.AsteroidField(self.num_asteroids, self.player)
+        self.powerup_field = pwr.PowerUpField(self.num_power_ups, self.player)
 
-    level_background = bg.Background()
-    starfield = stf.Starfield(15)
-    player = plr.Player_pawn(CST.SCREEN_WIDTH // 2, CST.SCREEN_HEIGHT // 2)
-    text_title = txt.StaticText("Space Stone Dodger", 48, TITLE_COORDS, CST.TXT.CENTER)
-    text_keys = txt.StaticText("Move with W,A,S,D", 32, KEYS_TEXT_COORDS, CST.TXT.CENTER)
-    text_bottom = txt.StaticText("(press [SPACE] to begin)", 24, BOTTOM_TEXT_COORDS, CST.TXT.CENTER)
-    
+        # Append order is draw order
+        self.updatelist.append(self.level_background)
+        self.updatelist.append(self.powerup_field)
+        self.updatelist.append(self.starfield)
+        self.updatelist.append(self.player)
+        self.updatelist.append(self.asteroid_field)
+        self.updatelist.append(self.ui_lifebar)
 
-    updatelist = [] # Append order is draw order
-    updatelist.append(level_background)
-    updatelist.append(starfield)
-    updatelist.append(player)
-    updatelist.append(text_title)
-    updatelist.append(text_keys)
-    updatelist.append(text_bottom)
-    
+    def event_checking(self, this_event: pygame.event) -> None:
+        super().event_checking(this_event) # for quitting handling
+        if this_event.type == CST.PLAYER_HIT:
+            self.player.got_hit(CST.PLAYER_DEAD)
+        if this_event.type == CST.PLAYER_DEAD:
+            self.quit_loop(CST.SCENES.GAME_LOSING_SCREEN)
+        if this_event.type == CST.POWER_UP_COLLECTED:
+            print("Power Up collected!") # Here we should totally do something more useful
 
-    frame_counter = 0
+    def keys_to_check(self, key_list: list) -> None:
+        self.player.handle_movement(key_list)
+        self.asteroid_field.handle_movement(key_list)
 
-    time = t.time()
-    unprocessed = 0
-    FRAME_CAP = 1.0 / CST.FPS # How many millisecons needs to pass each frame
-    # Main game loop
-    while True:
-        can_render = False
-        time_2 = t.time()
-        passed = time_2 - time
-        unprocessed += passed
-        time = time_2
-
-        for event in pygame.event.get():
-            # Handling of quit event
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit() # ensures we quit the program
-                
-        # Key state capturing
-        keys_pressed = pygame.key.get_pressed() # Gets the bool state of all keyboard buttons
-
-        # Frame stabilyzer
-        while unprocessed >= FRAME_CAP:
-            unprocessed -= FRAME_CAP
-            can_render = True
-
-        # What happens each frame
-        if can_render:
-            frame_counter += 1
-
-            player.handle_movement(keys_pressed)
-            if CST.pressed("SPACE", keys_pressed):
-                return CST.SCENES.GAME_LEVEL
-
-            # Drawing sequence
-            for gameobj in updatelist:
-                gameobj.game_tick_update(WIN) # All classes have this methods
-            pygame.display.update()
-
-            """
-            if frame_counter % (1*CST.FPS) == 0: # every second
-                frame_counter = 0
-                # do other stuff
-                """
+    def reset_state(self):
+        self.__init__(self.GAME_WINDOW) # Forcing the level to initial state
 
 
 
-def game_losing_screen(WIN: pygame.Surface) -> None:
 
-    TITLE_COORDS = (CST.SCREEN_WIDTH // 2, CST.SCREEN_HEIGHT // 2)
-    BOTTOM_TEXT_COORDS = (CST.SCREEN_WIDTH // 2, CST.SCREEN_HEIGHT * 0.9)
+class GameLosingScreen(Scn.Scene):
+    def scene_related_init(self):
+        TITLE_COORDS = (CST.SCREEN_WIDTH // 2, CST.SCREEN_HEIGHT // 2)
+        BOTTOM_TEXT_COORDS = (CST.SCREEN_WIDTH // 2, CST.SCREEN_HEIGHT * 0.9)
 
-    level_background = bg.Background()
-    text_title = txt.StaticText("Sadly, stones Won", 48, TITLE_COORDS, CST.TXT.CENTER)
-    text_bottom = txt.StaticText("(press [SPACE] to play again)", 20, BOTTOM_TEXT_COORDS, CST.TXT.CENTER)
-    
+        self.level_background = bg.Background()
+        self.text_title = txt.StaticText("Sadly, stones Won", 48, TITLE_COORDS, CST.TXT.CENTER)
+        self.text_bottom = txt.StaticText("(press [SPACE] to play again)", 20, BOTTOM_TEXT_COORDS, CST.TXT.CENTER)
+        
+        self.updatelist.append(self.level_background)
+        self.updatelist.append(self.text_title)
+        self.updatelist.append(self.text_bottom)
 
-    updatelist = [] # Append order is draw order
-    updatelist.append(level_background)
-    updatelist.append(text_title)
-    updatelist.append(text_bottom)
-
-    frame_counter = 0
-
-    time = t.time()
-    unprocessed = 0
-    FRAME_CAP = 1.0 / CST.FPS # How many millisecons needs to pass each frame
-    # Main game loop
-    while True:
-        can_render = False
-        time_2 = t.time()
-        passed = time_2 - time
-        unprocessed += passed
-        time = time_2
-
-        for event in pygame.event.get():
-            # Handling of quit event
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit() # ensures we quit the program
-                
-        # Key state capturing
-        keys_pressed = pygame.key.get_pressed() # Gets the bool state of all keyboard buttons
-
-        # Frame stabilyzer
-        while unprocessed >= FRAME_CAP:
-            unprocessed -= FRAME_CAP
-            can_render = True
-
-        # What happens each frame
-        if can_render:
-            frame_counter += 1
-
-            if CST.pressed("SPACE", keys_pressed):
-                return CST.SCENES.GAME_LEVEL
-
-            # Drawing sequence
-            for gameobj in updatelist:
-                gameobj.game_tick_update(WIN) # All classes have this methods
-            pygame.display.update()
-
-            """
-            if frame_counter % (1*CST.FPS) == 0: # every second
-                frame_counter = 0
-                # do stuff
-            """
-
+    def keys_to_check(self, key_list: list):
+        if CST.pressed("SPACE", key_list):
+            self.quit_loop(CST.SCENES.GAME_LEVEL)
+  
 
 
 
@@ -235,6 +114,10 @@ def main_game():
     # Defining our game window
     WIN = pygame.display.set_mode((CST.SCREEN_WIDTH, CST.SCREEN_HEIGHT))
     pygame.display.set_caption("Space Stone Dodger!")
+
+    game_menu = GameMenu(WIN)
+    game_level = GameLevel(WIN)
+    game_losing_screen = GameLosingScreen(WIN)
 
     scenelist = [
         game_menu,
@@ -246,7 +129,7 @@ def main_game():
 
     # Scene sequence, each scene returns the index for the next one
     while True:
-        next_scene = scenelist[next_scene](WIN)
+        next_scene = scenelist[next_scene].run()
 
 
 
