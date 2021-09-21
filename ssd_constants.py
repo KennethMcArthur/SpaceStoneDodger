@@ -69,6 +69,15 @@ KEYBINDINGS = {
     "SPACE": (
         pygame.K_SPACE,
     ),
+    "P": (
+        pygame.K_p,
+    ),
+    "M": (
+        pygame.K_m,
+    ),
+        "T": (
+        pygame.K_t,
+    ),
 }
 
 
@@ -95,8 +104,9 @@ COLOR_WHITE = (255, 255, 255)
 class SCENES:
     """ Object that groups all scenes """
     GAME_MENU = 0
-    GAME_LEVEL = 1
-    GAME_LOSING_SCREEN = 2
+    GAME_TUTORIAL = 1
+    GAME_LEVEL = 2
+    GAME_LOSING_SCREEN = 3
 
 
 # Text alignment
