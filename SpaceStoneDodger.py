@@ -130,15 +130,15 @@ class GameLevel(Scn.Scene):
         self.updatelist.append(self.ui_lifebar)
         self.updatelist.append(self.score_label)
 
-        self.set_timer_step(10) # Setting the internal timer
+        self.set_timer_step(1) # Setting the internal timer
 
     def timer_duty(self) -> None:
         # What happens when the timer goes off
-        self.num_asteroids += 1
-        self.num_power_ups = self.num_asteroids // 2
-        self.asteroid_field.resize(self.num_asteroids)
-        self.powerup_field.resize(self.num_power_ups)
-        print("Asteroids: ", str(self.num_asteroids))
+        """
+        TODO: PowerUp spawning rework
+        Now we can base the number of powerup on the amount of asteroids passed
+        """
+        print("Asteroids passed: ", str(self.asteroid_field.get_how_many_passed()))
         
 
     def event_checking(self, this_event: pygame.event) -> None:
