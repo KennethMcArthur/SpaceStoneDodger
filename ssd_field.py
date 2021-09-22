@@ -15,6 +15,7 @@ class Field_of:
         self.spawn_parameters = spawn_parameters
         self.to_be_deleted = 0
         self.elements = [self.new_element() for _ in range(howmany)]
+        self.how_many_passed = 0
 
 
     def random_position(self, spwn_par: dict) -> int:
@@ -43,6 +44,10 @@ class Field_of:
         pass
 
 
+    def get_how_many_passed(self) -> int:
+        return self.how_many_passed
+
+
     def game_tick_update(self, window: pygame.Surface) -> None:
         """ Updates each asteroid """
         i = 0
@@ -50,6 +55,7 @@ class Field_of:
             element = self.elements[i]
 
             if element.is_offscreen_left():
+                self.how_many_passed += 1 # Keeping track of how many elements have passed
                 if self.to_be_deleted > 0: # we ditch this element if there are too many...
                     self.elements.pop(i)
                     self.to_be_deleted -= 1
