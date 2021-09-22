@@ -21,8 +21,10 @@ class Asteroid(pygame.sprite.Sprite):
     external_speed_modifier = 1
 
     def __init__(self, x: int, y: int, speed: int) -> None:
-        self.radius = Asteroid.WIDTH // 2
-        self.rect = Asteroid.SPRITE_IMAGE.get_rect()
+        self.scale = randint(24, 128)
+        self.this_sprite_image = pygame.transform.scale(Asteroid.SPRITE_IMAGE, (self.scale, self.scale))
+        self.radius = self.scale // 2 - self.scale//32 # Collision radius is 1/32 smaller than the sprite to help player
+        self.rect = self.this_sprite_image.get_rect()
         self.relocate(x, y, speed)
 
 
@@ -37,12 +39,12 @@ class Asteroid(pygame.sprite.Sprite):
         """ Moves the asteroid left """
         self.x -= self.speed * Asteroid.external_speed_modifier
         self.rect.x, self.rect.y = self.x, self.y
-        window.blit(Asteroid.SPRITE_IMAGE, (self.x, self.y))
+        window.blit(self.this_sprite_image, (self.x, self.y))
 
 
     def is_offscreen_left(self) -> bool:
         """ Used to know if the asteroid is out of screen """
-        return self.x < (0 - Asteroid.WIDTH)
+        return self.x < (0 - self.scale)
 
 
 
@@ -57,7 +59,7 @@ class AsteroidField(fld.Field_of):
             "y_from": 0 - self.Y_OFFSET,
             "y_to": CST.SCREEN_HEIGHT - self.Y_OFFSET,
             "min_speed": CST.ASTEROID_STARTING_MIN_SPEED,
-            "max_speed": CST.ASTEROID_STARTING_MAX_SPEED
+            "max_speed": CST.ASTEROID_STARTING_MAX_SPEED,
         }
         super().__init__(Asteroid, howmany, self.spawn_parameters)
 
