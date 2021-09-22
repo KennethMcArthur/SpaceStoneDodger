@@ -67,10 +67,8 @@ class AsteroidField(fld.Field_of):
     def handle_movement(self, keys_pressed: list) -> None:
         """ Manages the speed modifier of the field based on key pressing """
         speed_modifier = 1
-        if pressed("LEFT", keys_pressed): #left key
-            speed_modifier = CST.ASTEROID_SPEED_MODIFIER_DECEL
-        if pressed("RIGHT", keys_pressed): #right key
-            speed_modifier = CST.ASTEROID_SPEED_MODIFIER_ACCEL
+        if pressed("SPACE", keys_pressed): # Acceleration
+            speed_modifier = CST.BOOST_SPEED_MODIFIER
 
         Asteroid.external_speed_modifier = speed_modifier
         

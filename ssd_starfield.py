@@ -6,12 +6,15 @@ import pygame
 from random import randint
 import ssd_constants as CST
 import ssd_field as fld
+from ssd_constants import pressed
 
 
 
 class Star(pygame.sprite.Sprite):
     """ Single star object """
     RADIUS = CST.STAR_SPRITE_RADIUS
+
+    external_speed_modifier = 1
 
     def __init__(self, x: int, y: int, speed: int) -> None:
         grayshade = randint(50, 125) # Random grey shade to simulate different stars distances
@@ -27,7 +30,7 @@ class Star(pygame.sprite.Sprite):
 
 
     def game_tick_update(self, window) -> None:
-        self.x -= self.speed
+        self.x -= self.speed * Star.external_speed_modifier
         pygame.draw.circle(window, self.COLOR, (self.x, self.y), Star.RADIUS)
     
     
@@ -52,6 +55,13 @@ class Starfield(fld.Field_of):
         # After an initial full screen spawn, we set the spawn zone correctly
         self.spawn_parameters["x_from"] = CST.SCREEN_WIDTH
 
+    def handle_movement(self, keys_pressed: list) -> None:
+        """ Manages the speed modifier of the field based on key pressing """
+        speed_modifier = 1
+        if pressed("SPACE", keys_pressed): #left key
+            speed_modifier = CST.BOOST_SPEED_MODIFIER
+
+        Star.external_speed_modifier = speed_modifier    
 
 
 

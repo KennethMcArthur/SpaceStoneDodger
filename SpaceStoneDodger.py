@@ -108,8 +108,8 @@ class GameTutorial(Scn.Scene):
 
 class GameLevel(Scn.Scene):
     def scene_related_init(self):
-        self.num_power_ups = 3
-        self.num_asteroids = 5
+        self.num_power_ups = 1
+        self.num_asteroids = 2
         self.num_stars = 15
         self.score = 0
 
@@ -155,6 +155,8 @@ class GameLevel(Scn.Scene):
     def keys_to_check(self, key_list: list) -> None:
         self.player.handle_movement(key_list)
         self.asteroid_field.handle_movement(key_list)
+        self.powerup_field.handle_movement(key_list)
+        self.starfield.handle_movement(key_list)
 
 
     def reset_state(self):
