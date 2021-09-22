@@ -1,6 +1,6 @@
 # pylint: disable=no-member
 
-# SpaceStoneDodger: Asteroid and Asteroid Field Classes
+# SpaceStoneDodger: Field Class, from which every type of field should inherit
 
 import pygame
 from random import randint
