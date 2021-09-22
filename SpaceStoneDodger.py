@@ -111,6 +111,7 @@ class GameLevel(Scn.Scene):
         self.num_power_ups = 3
         self.num_asteroids = 5
         self.num_stars = 15
+        self.score = 0
 
         self.level_background = bg.Background()
         self.starfield = stf.Starfield(self.num_stars)
@@ -118,6 +119,7 @@ class GameLevel(Scn.Scene):
         self.ui_lifebar = plr.Lifebar(self.player)
         self.asteroid_field = ast.AsteroidField(self.num_asteroids, self.player)
         self.powerup_field = pwr.PowerUpField(self.num_power_ups, self.player)
+        self.score_label = txt.StaticText("Score:", 14, (0,0), CST.TXT.LEFT)
 
         # Append order is draw order
         self.updatelist.append(self.level_background)
@@ -126,6 +128,18 @@ class GameLevel(Scn.Scene):
         self.updatelist.append(self.player)
         self.updatelist.append(self.asteroid_field)
         self.updatelist.append(self.ui_lifebar)
+        self.updatelist.append(self.score_label)
+
+        self.set_timer_step(5) # Setting the internal timer to 7 seconds
+
+    def timer_duty(self) -> None:
+        # What happens when the timer goes off
+        self.num_asteroids += 1
+        self.num_power_ups = self.num_asteroids // 2
+        self.asteroid_field.resize(self.num_asteroids)
+        self.powerup_field.resize(self.num_power_ups)
+        print("Asteroids: ", str(self.num_asteroids))
+        
 
     def event_checking(self, this_event: pygame.event) -> None:
         super().event_checking(this_event) # for quitting handling
@@ -134,11 +148,14 @@ class GameLevel(Scn.Scene):
         if this_event.type == CST.PLAYER_DEAD:
             self.quit_loop(CST.SCENES.GAME_LOSING_SCREEN)
         if this_event.type == CST.POWER_UP_COLLECTED:
-            print("Power Up collected!") # Here we should totally do something more useful
+            self.score += 1
+            self.score_label.set_text("Score: " + str(self.score))
+
 
     def keys_to_check(self, key_list: list) -> None:
         self.player.handle_movement(key_list)
         self.asteroid_field.handle_movement(key_list)
+
 
     def reset_state(self):
         self.__init__(self.GAME_WINDOW) # Forcing the level to initial state
