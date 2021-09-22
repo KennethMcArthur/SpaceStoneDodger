@@ -130,7 +130,7 @@ class GameLevel(Scn.Scene):
         self.updatelist.append(self.ui_lifebar)
         self.updatelist.append(self.score_label)
 
-        self.set_timer_step(5) # Setting the internal timer to 7 seconds
+        self.set_timer_step(10) # Setting the internal timer
 
     def timer_duty(self) -> None:
         # What happens when the timer goes off
