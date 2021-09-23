@@ -42,9 +42,15 @@ class Player_pawn(pygame.sprite.Sprite):
         """ Manages what happens when the player gets hit """
         if self.invul_timer == 0:
             self.health -= 1
-            if self.health == 0: pygame.event.post(pygame.event.Event(game_over_event))
+            if self.health == 0:
+                pygame.event.post(pygame.event.Event(game_over_event))
             self.invul_timer = CST.PLAYER_INVULNERABILITY_DURATION * CST.FPS
             self.repair_timer = self.REPAIR_TIME # Resetting repair state upon hit
+
+
+    def is_invulnerable(self) -> bool:
+        """ Checks if the player is still invulnerable after a hit """
+        return self.invul_timer != 0
 
 
     def repair(self) -> None:
