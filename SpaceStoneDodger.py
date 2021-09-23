@@ -112,6 +112,8 @@ class GameLevel(Scn.Scene):
         self.num_asteroids = 2
         self.num_stars = 15
         self.score = 0
+        self.asteroid_needed_to_next = 4
+        self.asteroid_passed_target_number = 5
 
         self.level_background = bg.Background()
         self.starfield = stf.Starfield(self.num_stars)
@@ -136,9 +138,19 @@ class GameLevel(Scn.Scene):
         # What happens when the timer goes off
         """
         TODO: PowerUp spawning rework
-        Now we can base the number of powerup on the amount of asteroids passed
         """
-        print("Asteroids passed: ", str(self.asteroid_field.get_how_many_passed()))
+        passed = self.asteroid_field.get_how_many_passed()
+        if passed >= self.asteroid_passed_target_number:
+            self.asteroid_needed_to_next += 1
+            self.asteroid_passed_target_number += self.asteroid_needed_to_next
+            self.num_asteroids = 2 + self.score // 3
+            self.num_power_ups = 1 + self.num_asteroids // 3
+            self.asteroid_field.resize(self.num_asteroids)
+            self.powerup_field.resize(self.num_power_ups)
+            print("Target number is now", self.asteroid_passed_target_number)
+            
+        print("Asteroids passed: ", passed)
+        print("Total asteroids:", len(self.asteroid_field.elements))
         
 
     def event_checking(self, this_event: pygame.event) -> None:
