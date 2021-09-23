@@ -73,8 +73,9 @@ class PowerUpField(fld.Field_of):
 
     def other_stuff_for_each(self, element):
         """ Overriding from super() class to add collision checking """
-        # Collisions checking
-        if pygame.sprite.collide_circle(element, self.player):
+        # Collisions checking, player can't get powerup if still invulnerable from a hit
+        collided = pygame.sprite.collide_circle(element, self.player)
+        if collided and self.player.is_invulnerable() == False:
             pygame.event.post(pygame.event.Event(CST.POWER_UP_COLLECTED))
             self.elements.remove(element) # PowerUps collected are removed
 
