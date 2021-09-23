@@ -31,7 +31,12 @@ class Star(pygame.sprite.Sprite):
 
     def game_tick_update(self, window) -> None:
         self.x -= self.speed * Star.external_speed_modifier
-        pygame.draw.circle(window, self.COLOR, (self.x, self.y), Star.RADIUS)
+        if Star.external_speed_modifier == 1:
+            pygame.draw.circle(window, self.COLOR, (self.x, self.y), Star.RADIUS)
+        else:
+            start_pos = (self.x, self.y)
+            end_pos = (self.x + 3, self.y)
+            pygame.draw.line(window, self.COLOR, start_pos, end_pos, self.RADIUS)
     
     
     def is_offscreen_left(self) -> bool:
