@@ -110,7 +110,7 @@ class GameLevel(Scn.Scene):
     def scene_related_init(self):
         self.num_power_ups = 1
         self.num_asteroids = 2
-        self.num_stars = 15
+        self.num_stars = 24
         self.score = 0
         self.asteroid_needed_to_next = 4
         self.asteroid_passed_target_number = 5
