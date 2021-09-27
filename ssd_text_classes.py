@@ -38,7 +38,7 @@ class StaticText:
 
 class AnimatedTypedText:
     """ Class for animated text """
-    def __init__(self, text: str, size: int, position: tuple, speed: int) -> None:
+    def __init__(self, text: str, size: int, position: tuple, speed: int, autostart: bool = True) -> None:
         """ Speed is a positive integer, FPS are divided by speed:
             1: one letter per second
             2: one letter every half a second
@@ -56,20 +56,31 @@ class AnimatedTypedText:
         self.letters_shown = 0
         self.frame_counter = 0
 
+        self.active = autostart
+
+
     def set_text(self, new_text: str) -> None:
         """ Updates the text """
         self.titletext = self.titlefont.render(new_text, True, CST.COLOR_WHITE)
 
-    def game_tick_update(self, window: pygame.Surface) -> None:
-        if self.letters_shown < len(self.total_text):
-            self.frame_counter += 1
-            
-            if self.frame_counter % self.speed_break_point == 0:
-                self.frame_counter = 0
-                self.letters_shown += 1
-            self.set_text(self.total_text[:self.letters_shown])
 
-        window.blit(self.titletext, self.titlerect)
+    def start(self):
+        """ Forces the text to start its animation """
+        self.active = True
+
+
+    def game_tick_update(self, window: pygame.Surface) -> None:
+        if self.active:
+            if self.letters_shown < len(self.total_text):
+                self.frame_counter += 1
+                
+                if self.frame_counter % self.speed_break_point == 0:
+                    self.frame_counter = 0
+                    self.letters_shown += 1
+                self.set_text(self.total_text[:self.letters_shown])
+
+            window.blit(self.titletext, self.titlerect)
+
 
 
 
@@ -90,7 +101,9 @@ if __name__ == "__main__":
     dummy_static_text = StaticText("Center", 32, (CST.SCREEN_WIDTH//2, 100), CST.TXT.CENTER)
     dummy_left_text = StaticText("Left", 32, (50, 50), CST.TXT.LEFT)
     dummy_right_text = StaticText("Right", 32, (CST.SCREEN_WIDTH-50, 150), CST.TXT.RIGHT)
-    dummy_animated_text = AnimatedTypedText("This is an animated text, it should appear one letter at time", 12, (50, 300), 20)
+    dummy_animated_text = AnimatedTypedText(
+        "This is an animated text, it should appear after 5 seconds, one letter at time",
+        12, (50, 300), 20, autostart=False)
 
 
     updatelist = [] # Append order is draw order
@@ -100,7 +113,7 @@ if __name__ == "__main__":
     updatelist.append(dummy_right_text)
     updatelist.append(dummy_animated_text)
 
-    test_counter = 1
+    test_counter = 0
 
     FRAME_CAP = 1.0 / CST.FPS # How many millisecons needs to pass
     time = t.time()
@@ -125,9 +138,13 @@ if __name__ == "__main__":
 
         if can_render:
             # put everything inside here
+            test_counter += 1
+
             # Drawing sequence
             for gameobj in updatelist:
                 gameobj.game_tick_update(WIN) # All classes have this methods
 
-
+            if test_counter == 5*CST.FPS: # after 5 seconds...
+                dummy_animated_text.start()
+            
             pygame.display.update()
