@@ -1,7 +1,11 @@
 # pylint: disable=no-member
 
-# SpaceStoneDodger: Scene master class
+# SpaceStoneDodger: Scene Master class
 # This class implements the basic methods for running a scene
+
+# Thanks to William Hou from
+# https://gamedev.stackexchange.com/questions/102586/locking-the-frame-rate-in-pygame
+# for a mean to stabilyze the frame rate
 
 import pygame, sys
 import time as t
@@ -29,10 +33,9 @@ class Scene:
 
     def event_checking(self, this_event: pygame.event) -> None:
         """ Overridable to check different events """
-        # Handling of quit event
-        if this_event.type == pygame.QUIT:
+        if this_event.type == pygame.QUIT: # Handling of quit event
             pygame.quit()
-            sys.exit() # ensures we quit the program
+            sys.exit() # ensures we quit game AND program
 
 
     def keys_to_check(self, key_list: list) -> None:
@@ -99,7 +102,7 @@ class Scene:
                     gameobj.game_tick_update(self.GAME_WINDOW) # All classes have this methods
                 pygame.display.update()
 
-                
+                # Game timer, used by scenes as thery want                
                 if game_timer % (self.game_timer_step * CST.FPS) == 0: # every X seconds
                     game_timer = 0
                     self.timer_duty()
