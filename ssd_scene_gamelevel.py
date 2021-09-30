@@ -21,8 +21,6 @@ class GameLevel(Scn.Scene):
         self.num_asteroids = 2
         self.num_stars = 24
         self.score = 0
-        self.asteroid_needed_to_next = 4
-        self.asteroid_passed_target_number = 5
 
         self.level_background = bg.Background()
         self.starfield = stf.Starfield(self.num_stars)
@@ -41,26 +39,20 @@ class GameLevel(Scn.Scene):
         self.updatelist.append(self.ui_lifebar)
         self.updatelist.append(self.score_label)
 
+        self.timeline = { # Keys are seconds of play, values are methods
+            2: self.timeline_event_1,
+            4: self.timeline_event_2,
+            6: self.timeline_event_3,
+        }
+
         self.set_timer_step(1) # Setting the internal timer
+        self.timer_seconds_passed = 0
 
 
     def timer_duty(self) -> None:
         # What happens when the timer goes off
-        """
-        TODO: PowerUp spawning rework
-        """
-        passed = self.asteroid_field.get_how_many_passed()
-        if passed >= self.asteroid_passed_target_number:
-            self.asteroid_needed_to_next += 1
-            self.asteroid_passed_target_number += self.asteroid_needed_to_next
-            self.num_asteroids = 2 + self.score // 3
-            self.num_power_ups = 1 + self.num_asteroids // 3
-            self.asteroid_field.resize(self.num_asteroids)
-            self.powerup_field.resize(self.num_power_ups)
-            print("Target number is now", self.asteroid_passed_target_number)
-            
-        print("Asteroids passed: ", passed)
-        print("Total asteroids:", len(self.asteroid_field.elements))
+        self.timer_seconds_passed += 1
+        self.check_timeline_progress(self.timer_seconds_passed)
         
 
     def event_checking(self, this_event: pygame.event) -> None:
@@ -82,9 +74,38 @@ class GameLevel(Scn.Scene):
 
 
     def reset_state(self):
-        self.__init__(self.GAME_WINDOW) # Forcing the level to initial state
+        self.__init__(self.GAME_WINDOW) # Forcing the level to initial state when playing again
 
   
+    # Timeline related methods
+    def check_timeline_progress(self, time_now) -> None:
+        """ Calls timeline events when it's the right time """
+        if not self.timeline:
+            return        
+        next_event_in_line = min(self.timeline.keys())
+        if time_now == next_event_in_line:
+            self.timeline[time_now]()
+            self.timeline.pop(time_now)
+
+    def timeline_event_1(self) -> None:
+        """ This is one event on the timeline, called when it's time """
+        print("This is Event 1, at 2 seconds, events in the timeline: ", str(len(self.timeline)))
+
+    def timeline_event_2(self) -> None:
+        """ This is one event on the timeline, called when it's time """
+        print("This is Event 2, at 4 seconds, events in the timeline: ", str(len(self.timeline)))
+        self.num_asteroids = 20
+        self.asteroid_field.resize(self.num_asteroids)
+
+    def timeline_event_3(self) -> None:
+        """ This is one event on the timeline, called when it's time """
+        print("This is Event 3, at 6 seconds, events in the timeline: ", str(len(self.timeline)))
+        self.num_asteroids = 1
+        self.asteroid_field.resize(self.num_asteroids)
+
+
+
+
 
 
 
