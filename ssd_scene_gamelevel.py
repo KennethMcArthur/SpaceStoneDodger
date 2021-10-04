@@ -17,8 +17,8 @@ import ssd_scene_master_class as Scn
 
 class GameLevel(Scn.Scene):
     def scene_related_init(self):
-        self.num_power_ups = 1
-        self.num_asteroids = 2
+        self.num_power_ups = 0
+        self.num_asteroids = 0
         self.num_stars = 24
         self.score = 0
 
@@ -40,9 +40,11 @@ class GameLevel(Scn.Scene):
         self.updatelist.append(self.score_label)
 
         self.timeline = { # Keys are seconds of play, values are methods
-            2: self.timeline_event_1,
-            4: self.timeline_event_2,
-            6: self.timeline_event_3,
+            2: self.tml_starting_speech_1,
+            10: self.tml_starting_speech_2,
+            21: self.tml_starting_speech_3,
+            37: self.tml_starting_speech_4,
+            #51: game starts
         }
 
         self.set_timer_step(1) # Setting the internal timer
@@ -87,22 +89,31 @@ class GameLevel(Scn.Scene):
             self.timeline[time_now]()
             self.timeline.pop(time_now)
 
-    def timeline_event_1(self) -> None:
+    def tml_starting_speech_1(self) -> None:
         """ This is one event on the timeline, called when it's time """
-        print("This is Event 1, at 2 seconds, events in the timeline: ", str(len(self.timeline)))
-
-    def timeline_event_2(self) -> None:
-        """ This is one event on the timeline, called when it's time """
-        print("This is Event 2, at 4 seconds, events in the timeline: ", str(len(self.timeline)))
-        self.num_asteroids = 20
+        begin_string = "Ok Pilot, I'm Navigator and I'll help you in today's mission. Look how cool it sounds when you call it 'mission'"
+        self.starter_text = txt.AnimatedTypedText(begin_string, 14, (30, 300), 20, autostart=False)
+        self.updatelist.append(self.starter_text)
+        self.num_asteroids = 0
         self.asteroid_field.resize(self.num_asteroids)
+        self.starter_text.start()
 
-    def timeline_event_3(self) -> None:
+    def tml_starting_speech_2(self) -> None:
         """ This is one event on the timeline, called when it's time """
-        print("This is Event 3, at 6 seconds, events in the timeline: ", str(len(self.timeline)))
-        self.num_asteroids = 1
-        self.asteroid_field.resize(self.num_asteroids)
+        this_event_text = "Our job is to collect metal scraps from space and then sell it for money, it ain't much but it's honest work, like my grand-grand-father used to say on earth."
+        self.starter_text.set_text(this_event_text)
+        self.starter_text.start()
 
+    def tml_starting_speech_3(self) -> None:
+        """ This is one event on the timeline, called when it's time """
+        this_event_text = "Today we detected an unusual asteroid activity not far from Quasari Station, this means that we'll surely find a lot of metal parts around there (you know, impacts).\nWe just need to collect as much scraps as we can, and with a Station nearby we could sell the stuff there."
+        self.starter_text.set_text(this_event_text)
+        self.starter_text.start()
+    
+    def tml_starting_speech_4(self) -> None:
+        this_event_text = "Avoid asteroids and don't get hit too much, repairs are automated but they costs precious metal.\nAlso, we could die. So try your best.\nOnward to Quasari Station, then."
+        self.starter_text.set_text(this_event_text)
+        self.starter_text.start()
 
 
 
