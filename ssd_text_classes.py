@@ -50,7 +50,7 @@ class AnimatedTypedText:
         self._generate_row_surfaces(text) # setting up the full text
             
         self.speed = min(speed, CST.FPS) # Cannot have a speed greater than FPS
-        self.speed_break_point = CST.FPS // speed
+        self.speed_break_point = CST.FPS // self.speed
 
         self.letters_shown = 0
         self.frame_counter = 0
