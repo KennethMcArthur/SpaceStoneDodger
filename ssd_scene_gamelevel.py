@@ -12,11 +12,12 @@ import ssd_background as bg
 import ssd_powerup as pwr
 import ssd_text_classes as txt
 import ssd_scene_master_class as Scn
-
+import ssd_movie_effect as mov
 
 
 class GameLevel(Scn.Scene):
     def scene_related_init(self):
+        self.keypress_allowed = False
         self.num_power_ups = 0
         self.num_asteroids = 0
         self.num_stars = 24
@@ -29,6 +30,7 @@ class GameLevel(Scn.Scene):
         self.asteroid_field = ast.AsteroidField(self.num_asteroids, self.player)
         self.powerup_field = pwr.PowerUpField(self.num_power_ups, self.player)
         self.score_label = txt.StaticText("Score:", 14, (0,0), CST.TXT.LEFT)
+        self.movie_effect = mov.MovieEffect(80, 20)
 
         # Append order is draw order
         self.updatelist.append(self.level_background)
@@ -38,13 +40,14 @@ class GameLevel(Scn.Scene):
         self.updatelist.append(self.asteroid_field)
         self.updatelist.append(self.ui_lifebar)
         self.updatelist.append(self.score_label)
+        self.updatelist.append(self.movie_effect)
 
         self.timeline = { # Keys are seconds of play, values are methods
             2: self.tml_starting_speech_1,
             10: self.tml_starting_speech_2,
             21: self.tml_starting_speech_3,
             37: self.tml_starting_speech_4,
-            #51: game starts
+            51: self.tml_playing_phase_start,
         }
 
         self.set_timer_step(1) # Setting the internal timer
@@ -69,6 +72,8 @@ class GameLevel(Scn.Scene):
 
 
     def keys_to_check(self, key_list: list) -> None:
+        if not self.keypress_allowed:
+            return
         self.player.handle_movement(key_list)
         self.asteroid_field.handle_movement(key_list)
         self.powerup_field.handle_movement(key_list)
@@ -115,7 +120,12 @@ class GameLevel(Scn.Scene):
         self.starter_text.set_text(this_event_text)
         self.starter_text.start()
 
-
+    def tml_playing_phase_start(self) -> None:
+        self.movie_effect.start_animation()
+        self.starter_text.hide()
+        self.keypress_allowed = True
+        self.num_asteroids = 2
+        self.asteroid_field.resize(self.num_asteroids)
 
 
 
