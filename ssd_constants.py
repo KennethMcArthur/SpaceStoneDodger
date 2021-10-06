@@ -84,7 +84,7 @@ KEYBINDINGS = {
 ASSET_DIR = "assets"
 SHIP_SPRITE = load_image(ASSET_DIR, "Ship.png")
 ASTEROID_SPRITE = load_image(ASSET_DIR, "asteroid.png")
-SPACE_BG = load_image(ASSET_DIR, "bg_blurry.jpg")
+SPACE_BG = load_image(ASSET_DIR, "purple_space_bg.png") # by Digital Moons (https://digitalmoons.itch.io/)
 METAL_SCRAP_SPRITE = load_image(ASSET_DIR, "metal_scrap2.png")
 TITLE_FONT = os.path.join(ASSET_DIR, "kongtext.ttf") # Font by codeman38 | cody@zone38.net | http://www.zone38.net/
 
@@ -97,6 +97,9 @@ POWER_UP_COLLECTED = pygame.USEREVENT + 3
 
 # Colors
 COLOR_WHITE = (255, 255, 255)
+COLOR_BLACK = (0, 0, 0)
+COLOR_GREEN = (0, 255, 0)
+
 
 
 # Scenes
