@@ -106,6 +106,11 @@ class AnimatedTypedText:
         self.letters_shown = 0 # Animation starts over
 
 
+    def hide(self) -> None:
+        """ Forces the text to disappear """
+        self.active = False
+
+
     def game_tick_update(self, window: pygame.Surface) -> None:
         if not self.active:
             return
