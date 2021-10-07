@@ -49,7 +49,7 @@ class Field_of:
 
 
     def game_tick_update(self, window: pygame.Surface) -> None:
-        """ Updates each asteroid """
+        """ Updates each field element """
         i = 0
         while i < len(self.elements): 
             element = self.elements[i]
