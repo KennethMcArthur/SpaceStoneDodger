@@ -78,6 +78,7 @@ class PowerUpField(fld.Field_of):
         if collided and self.player.is_invulnerable() == False:
             pygame.event.post(pygame.event.Event(CST.POWER_UP_COLLECTED))
             self.elements.remove(element) # PowerUps collected are removed
+            self.resize(len(self.elements)+1) # Refilling the elements list
 
 
 
