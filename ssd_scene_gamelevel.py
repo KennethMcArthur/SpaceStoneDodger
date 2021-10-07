@@ -18,7 +18,7 @@ import ssd_movie_effect as mov
 class GameLevel(Scn.Scene):
     def scene_related_init(self):
         self.keypress_allowed = False
-        self.num_power_ups = 0
+        self.num_power_ups = 1
         self.num_asteroids = 0
         self.num_stars = 24
         self.score = 0
@@ -30,6 +30,7 @@ class GameLevel(Scn.Scene):
         self.asteroid_field = ast.AsteroidField(self.num_asteroids, self.player)
         self.powerup_field = pwr.PowerUpField(self.num_power_ups, self.player)
         self.score_label = txt.StaticText("Score:", 14, (0,0), CST.TXT.LEFT)
+        self.navigator_text = txt.AnimatedTypedText("", 14, (30, 300), 20, autostart=False)
         self.movie_effect = mov.MovieEffect(80, 20)
 
         # Append order is draw order
@@ -40,6 +41,7 @@ class GameLevel(Scn.Scene):
         self.updatelist.append(self.asteroid_field)
         self.updatelist.append(self.ui_lifebar)
         self.updatelist.append(self.score_label)
+        self.updatelist.append(self.navigator_text)
         self.updatelist.append(self.movie_effect)
 
         self.timeline = { # Keys are seconds of play, values are methods
@@ -48,6 +50,25 @@ class GameLevel(Scn.Scene):
             21: self.tml_starting_speech_3,
             37: self.tml_starting_speech_4,
             51: self.tml_playing_phase_start,
+            55: self.playing_phase_1_1,
+            65: self.playing_phase_1_2,
+            75: self.playing_phase_1_3,
+            85: self.calm_before_the_swarm_1,
+            90: self.swarm_1,
+            95: self.swarm_passed_1,
+            100: self.playing_phase_2_1,
+            115: self.playing_phase_2_2,
+            130: self.playing_phase_2_3,
+            145: self.calm_before_the_swarm_2,
+            150: self.swarm_2,
+            158: self.swarm_passed_2,
+            163: self.playing_phase_3_1,
+            183: self.playing_phase_3_2,
+            203: self.playing_phase_3_3,
+            223: self.calm_before_the_swarm_3,
+            228: self.swarm_3,
+            240: self.swarm_passed_3,
+            245: self.end_cinematic
         }
 
         self.set_timer_step(1) # Setting the internal timer
@@ -88,45 +109,185 @@ class GameLevel(Scn.Scene):
     def check_timeline_progress(self, time_now) -> None:
         """ Calls timeline events when it's the right time """
         if not self.timeline:
-            return        
+            return
         next_event_in_line = min(self.timeline.keys())
+
+        while self.timer_seconds_passed > next_event_in_line: # Used to skip phases during tests
+            self.timeline.pop(next_event_in_line)
+            next_event_in_line = min(self.timeline.keys())
+
         if time_now == next_event_in_line:
             self.timeline[time_now]()
             self.timeline.pop(time_now)
 
     def tml_starting_speech_1(self) -> None:
         """ This is one event on the timeline, called when it's time """
-        begin_string = "Ok Pilot, I'm Navigator and I'll help you in today's mission. Look how cool it sounds when you call it 'mission'"
-        self.starter_text = txt.AnimatedTypedText(begin_string, 14, (30, 300), 20, autostart=False)
-        self.updatelist.append(self.starter_text)
+        this_event_text = "Ok Pilot, I'm Navigator and I'll help you in today's mission. Look how cool it sounds when you call it 'mission'"
         self.num_asteroids = 0
         self.asteroid_field.resize(self.num_asteroids)
-        self.starter_text.start()
+        self.navigator_text.set_text(this_event_text)
+        self.navigator_text.start()
 
     def tml_starting_speech_2(self) -> None:
         """ This is one event on the timeline, called when it's time """
         this_event_text = "Our job is to collect metal scraps from space and then sell it for money, it ain't much but it's honest work, like my grand-grand-father used to say on earth."
-        self.starter_text.set_text(this_event_text)
-        self.starter_text.start()
+        self.navigator_text.set_text(this_event_text)
+        self.navigator_text.start()
 
     def tml_starting_speech_3(self) -> None:
         """ This is one event on the timeline, called when it's time """
         this_event_text = "Today we detected an unusual asteroid activity not far from Quasari Station, this means that we'll surely find a lot of metal parts around there (you know, impacts).\nWe just need to collect as much scraps as we can, and with a Station nearby we could sell the stuff there."
-        self.starter_text.set_text(this_event_text)
-        self.starter_text.start()
+        self.navigator_text.set_text(this_event_text)
+        self.navigator_text.start()
     
     def tml_starting_speech_4(self) -> None:
         this_event_text = "Avoid asteroids and don't get hit too much, repairs are automated but they costs precious metal.\nAlso, we could die. So try your best.\nOnward to Quasari Station, then."
-        self.starter_text.set_text(this_event_text)
-        self.starter_text.start()
+        self.navigator_text.set_text(this_event_text)
+        self.navigator_text.start()
 
     def tml_playing_phase_start(self) -> None:
+        print("tml_playing_phase_start")
         self.movie_effect.start_animation()
-        self.starter_text.hide()
+        self.navigator_text.hide()
         self.keypress_allowed = True
-        self.num_asteroids = 2
-        self.asteroid_field.resize(self.num_asteroids)
 
+    def playing_phase_1_1(self) -> None:
+        print("playing_phase_1_1")
+        self.num_asteroids = 2
+        self.num_power_ups = 1
+        self.asteroid_field.resize(self.num_asteroids)
+        self.powerup_field.resize(self.num_power_ups)
+
+    def playing_phase_1_2(self) -> None:
+        print("playing_phase_1_2")
+        self.num_asteroids = 4
+        self.num_power_ups = 2
+        self.asteroid_field.resize(self.num_asteroids)
+        self.powerup_field.resize(self.num_power_ups)
+
+    def playing_phase_1_3(self) -> None:
+        print("playing_phase_1_3")
+        self.num_asteroids = 6
+        self.num_power_ups = 3
+        self.asteroid_field.resize(self.num_asteroids)
+        self.powerup_field.resize(self.num_power_ups)
+
+    def calm_before_the_swarm_1(self) -> None:
+        print("calm_before_the_swarm_1")
+        self.num_asteroids = 3
+        self.num_power_ups = 2
+        self.asteroid_field.resize(self.num_asteroids)
+        self.powerup_field.resize(self.num_power_ups)
+        self.navigator_text.set_text("Watch out! Lots of stones ahead!")
+        self.navigator_text.start()
+
+    def swarm_1(self) -> None:
+        print("swarm_1")
+        self.navigator_text.hide()
+        self.num_asteroids = 12
+        self.num_power_ups = 5
+        self.asteroid_field.resize(self.num_asteroids)
+        self.powerup_field.resize(self.num_power_ups)
+
+    def swarm_passed_1(self) -> None:
+        print("swarm_passed_1")
+        self.num_asteroids = 3
+        self.num_power_ups = 2
+        self.asteroid_field.resize(self.num_asteroids)
+        self.powerup_field.resize(self.num_power_ups)
+
+    def playing_phase_2_1(self) -> None:
+        print("playing_phase_2_1")
+        self.num_asteroids = 4
+        self.num_power_ups = 2
+        self.asteroid_field.resize(self.num_asteroids)
+        self.powerup_field.resize(self.num_power_ups)
+
+    def playing_phase_2_2(self) -> None:
+        print("playing_phase_2_2")
+        self.num_asteroids = 6
+        self.num_power_ups = 3
+        self.asteroid_field.resize(self.num_asteroids)
+        self.powerup_field.resize(self.num_power_ups)
+
+    def playing_phase_2_3(self) -> None:
+        print("playing_phase_2_3")
+        self.num_asteroids = 8
+        self.num_power_ups = 4
+        self.asteroid_field.resize(self.num_asteroids)
+        self.powerup_field.resize(self.num_power_ups)
+
+    def calm_before_the_swarm_2(self) -> None:
+        print("calm_before_the_swarm_2")
+        self.num_asteroids = 4
+        self.num_power_ups = 3
+        self.asteroid_field.resize(self.num_asteroids)
+        self.powerup_field.resize(self.num_power_ups)
+        self.navigator_text.set_text("Watch out! Big group ahead!")
+        self.navigator_text.start()
+
+    def swarm_2(self) -> None:
+        print("swarm_2")
+        self.navigator_text.hide()
+        self.num_asteroids = 16
+        self.num_power_ups = 6
+        self.asteroid_field.resize(self.num_asteroids)
+        self.powerup_field.resize(self.num_power_ups)
+
+    def swarm_passed_2(self) -> None:
+        print("swarm_passed_2")
+        self.num_asteroids = 4
+        self.num_power_ups = 3
+        self.asteroid_field.resize(self.num_asteroids)
+        self.powerup_field.resize(self.num_power_ups)
+
+    def playing_phase_3_1(self) -> None:
+        print("playing_phase_3_1")
+        self.num_asteroids = 6
+        self.num_power_ups = 4
+        self.asteroid_field.resize(self.num_asteroids)
+        self.powerup_field.resize(self.num_power_ups)
+
+    def playing_phase_3_2(self) -> None:
+        print("playing_phase_3_2")
+        self.num_asteroids = 8
+        self.num_power_ups = 5
+        self.asteroid_field.resize(self.num_asteroids)
+        self.powerup_field.resize(self.num_power_ups)
+
+    def playing_phase_3_3(self) -> None:
+        print("playing_phase_3_3")
+        self.num_asteroids = 10
+        self.num_power_ups = 6
+        self.asteroid_field.resize(self.num_asteroids)
+        self.powerup_field.resize(self.num_power_ups)
+
+    def calm_before_the_swarm_3(self) -> None:
+        print("calm_before_the_swarm_3")
+        self.num_asteroids = 5
+        self.num_power_ups = 8
+        self.asteroid_field.resize(self.num_asteroids)
+        self.powerup_field.resize(self.num_power_ups)
+        self.navigator_text.set_text("Watch out! HUGE group ahead!")
+        self.navigator_text.start()
+
+    def swarm_3(self) -> None:
+        print("swarm_3")
+        self.navigator_text.hide()
+        self.num_asteroids = 20
+        self.num_power_ups = 8
+        self.asteroid_field.resize(self.num_asteroids)
+        self.powerup_field.resize(self.num_power_ups)
+
+    def swarm_passed_3(self) -> None:
+        print("swarm_passed_3")
+        self.num_asteroids = 0
+        self.num_power_ups = 16
+        self.asteroid_field.resize(self.num_asteroids)
+        self.powerup_field.resize(self.num_power_ups)
+
+    def end_cinematic(self) -> None:
+        print("end_cinematic")
 
 
 
@@ -141,7 +302,7 @@ def main_game():
 
     game_level = GameLevel(WIN)
     next_scene = 0
-
+    game_level.timer_seconds_passed = 48 # Skipping intro for testing purpose
     # Scene sequence, each scene returns the index for the next one
     while True:
         next_scene = game_level.run()
