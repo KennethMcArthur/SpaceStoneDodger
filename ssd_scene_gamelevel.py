@@ -18,7 +18,7 @@ import ssd_movie_effect as mov
 class GameLevel(Scn.Scene):
     def scene_related_init(self):
         self.keypress_allowed = False
-        self.num_power_ups = 1
+        self.num_power_ups = 0
         self.num_asteroids = 0
         self.num_stars = 24
         self.score = 0
@@ -68,7 +68,14 @@ class GameLevel(Scn.Scene):
             223: self.calm_before_the_swarm_3,
             228: self.swarm_3,
             240: self.swarm_passed_3,
-            245: self.end_cinematic
+            245: self.end_cinematic_1,
+            251: self.end_cinematic_2,
+            257: self.end_cinematic_3,
+            263: self.end_cinematic_4,
+            266: self.end_cinematic_5,
+            273: self.end_cinematic_6,
+            285: self.end_cinematic_7,
+            290: self.end_cinematic_8,
         }
 
         self.set_timer_step(1) # Setting the internal timer
@@ -123,8 +130,6 @@ class GameLevel(Scn.Scene):
     def tml_starting_speech_1(self) -> None:
         """ This is one event on the timeline, called when it's time """
         this_event_text = "Ok Pilot, I'm Navigator and I'll help you in today's mission. Look how cool it sounds when you call it 'mission'"
-        self.num_asteroids = 0
-        self.asteroid_field.resize(self.num_asteroids)
         self.navigator_text.set_text(this_event_text)
         self.navigator_text.start()
 
@@ -268,7 +273,7 @@ class GameLevel(Scn.Scene):
         self.num_power_ups = 8
         self.asteroid_field.resize(self.num_asteroids)
         self.powerup_field.resize(self.num_power_ups)
-        self.navigator_text.set_text("Watch out! HUGE group ahead!")
+        self.navigator_text.set_text("Almost there, but here's a HUGE group!")
         self.navigator_text.start()
 
     def swarm_3(self) -> None:
@@ -286,8 +291,56 @@ class GameLevel(Scn.Scene):
         self.asteroid_field.resize(self.num_asteroids)
         self.powerup_field.resize(self.num_power_ups)
 
-    def end_cinematic(self) -> None:
-        print("end_cinematic")
+    def end_cinematic_1(self) -> None:
+        print("end_cinematic_1")
+        self.keypress_allowed = False
+        self.player.automove_to(50, CST.SCREEN_HEIGHT // 2)
+        self.movie_effect.start_animation()
+
+    def end_cinematic_2(self) -> None:
+        print("end_cinematic_2")
+        this_event_text = "Look at all this treasure! We're going to be RICH!"
+        self.navigator_text.set_text(this_event_text)
+        self.navigator_text.start()
+
+    def end_cinematic_3(self) -> None:
+        print("end_cinematic_3")
+        this_event_text = "Well, that's weird. I mean: who'd leave all this stuff right next to the station?!"
+        self.navigator_text.set_text(this_event_text)
+        self.navigator_text.start()
+
+    def end_cinematic_4(self) -> None:
+        print("end_cinematic_4")
+        self.num_power_ups = 60
+        self.powerup_field.resize(self.num_power_ups)
+        this_event_text = "Wait..."
+        self.navigator_text.set_text(this_event_text)
+        self.navigator_text.start()
+
+    def end_cinematic_5(self) -> None:
+        print("end_cinematic_5")
+        this_event_text = "Oh my...we're not close to the station: this IS the station, or what is left."
+        self.navigator_text.set_text(this_event_text)
+        self.navigator_text.start()
+        self.powerup_field.stop_movements()
+        self.starfield.stop_movements()
+
+    def end_cinematic_6(self) -> None:
+        print("end_cinematic_6")
+        this_event_text = "There's no way it's just an accident, We're definitely not safe here.\nLet's go and FAST, we'll figure out what happened later."
+        self.navigator_text.set_text(this_event_text)
+        self.navigator_text.start()
+    
+    def end_cinematic_7(self) -> None:
+        print("end_cinematic_7")
+        this_event_text = "...to be continued"
+        self.navigator_text.set_text(this_event_text)
+        self.navigator_text.start()
+        self.player.automove_to(CST.SCREEN_WIDTH + 100, CST.SCREEN_HEIGHT // 2)
+
+    def end_cinematic_8(self) -> None:
+        print("end_cinematic_8")
+
 
 
 
@@ -302,7 +355,7 @@ def main_game():
 
     game_level = GameLevel(WIN)
     next_scene = 0
-    game_level.timer_seconds_passed = 48 # Skipping intro for testing purpose
+    game_level.timer_seconds_passed = 260 # Skipping intro for testing purpose
     # Scene sequence, each scene returns the index for the next one
     while True:
         next_scene = game_level.run()
