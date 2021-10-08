@@ -16,6 +16,12 @@ class Field_of:
         self.to_be_deleted = 0
         self.elements = [self.new_element() for _ in range(howmany)]
         self.how_many_passed = 0
+        self.stop_all = False
+
+
+    def stop_movements(self) -> None:
+        """ Used as flag to stop the movements of field elements """
+        self.stop_all = True
 
 
     def random_position(self, spwn_par: dict) -> int:
