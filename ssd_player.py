@@ -25,9 +25,15 @@ class Player_pawn(pygame.sprite.Sprite):
         self.REPAIR_TIME = CST.PLAYER_REPAIR_TIME * CST.FPS # Frames required to gain 1 life
         self.repair_timer = self.REPAIR_TIME
 
+        self.end_cinematic_x_pos = 0
+        self.end_cinematic_y_pos = 0
+        self.cpu_controlled = False
+
 
     def handle_movement(self, k_pressed: list) -> None:
         """ Manages the movement of the player based on key pressing """
+        if self.cpu_controlled:
+            return
         if pressed("LEFT", k_pressed) and self.x - self.SHIP_SPEED > 0:
             self.x -= self.SHIP_SPEED
         if pressed("RIGHT", k_pressed) and self.x + self.SHIP_SPEED + self.width < CST.SCREEN_WIDTH:
@@ -68,13 +74,41 @@ class Player_pawn(pygame.sprite.Sprite):
         return 100 - (100 * self.repair_timer) // self.REPAIR_TIME
 
 
+    def user_controlled(self) -> None:
+        """ Give control back to the user """
+        self.cpu_controlled = False
+
+
+    def automove_to(self, x: int, y: int) -> None:
+        """ Sets where the ship should go in automove """
+        self.cpu_controlled = True
+        self.end_cinematic_x_pos = x
+        self.end_cinematic_y_pos = y
+
+
+    def automove(self):
+        """ Moves the ship automatically """
+        if self.x < self.end_cinematic_x_pos:
+            self.x += self.SHIP_SPEED
+        if self.x > self.end_cinematic_x_pos:
+            self.x -= self.SHIP_SPEED
+        if self.y < self.end_cinematic_y_pos:
+            self.y += self.SHIP_SPEED
+        if self.y > self.end_cinematic_y_pos:
+            self.y -= self.SHIP_SPEED
+
+
     def game_tick_update(self, window):
+        if self.cpu_controlled:
+            self.automove()
+
         if self.invul_timer > 0:
             self.invul_timer -= 1
             self.sprite_image.set_alpha(125)
         else:
             self.sprite_image.set_alpha(255)
             self.repair()
+        
         self.rect.x, self.rect.y = self.x, self.y
         window.blit(self.sprite_image, (self.x, self.y))
    
@@ -103,3 +137,68 @@ class Lifebar(pygame.sprite.Sprite):
             coord_x = CST.SCREEN_WIDTH - (current_health+1) * 32 + (self.UI_SPRITE_SIZE // 2 - newscale //2)
             coord_y = self.y + (self.UI_SPRITE_SIZE // 2 - newscale //2)
             window.blit(smallsprite, (coord_x, coord_y))
+
+
+
+
+
+
+
+
+
+
+# TESTING AREA
+if __name__ == "__main__":
+    import sys
+    import time as t
+    import ssd_background as bg
+
+    pygame.init()
+
+    WIN = pygame.display.set_mode((CST.SCREEN_WIDTH, CST.SCREEN_HEIGHT))
+    pygame.display.set_caption("Test Field")
+    
+    testbg = bg.Background()
+    player = Player_pawn(50, 50)
+
+    updatelist = [] # Append order is draw order
+    updatelist.append(testbg)
+    updatelist.append(player)
+
+    test_counter = 0
+
+    FRAME_CAP = 1.0 / CST.FPS # How many millisecons needs to pass
+    time = t.time()
+    unprocessed = 0
+
+    while True:
+        can_render = False
+        time_2 = t.time()
+        passed = time_2 - time
+        unprocessed += passed
+        time = time_2
+
+        for event in pygame.event.get():
+            # Handling of quit event
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit() # ensures we quit the program
+        
+        while unprocessed >= FRAME_CAP:
+            unprocessed -= FRAME_CAP
+            can_render = True
+
+        if can_render:
+            # put everything inside here
+            test_counter += 1
+
+            # Drawing sequence
+            for gameobj in updatelist:
+                gameobj.game_tick_update(WIN) # All classes have this methods
+
+            if test_counter == 10*CST.FPS: # after 10 seconds...
+                print("Automoved")
+                player.automove_to(300,100)
+                
+            
+            pygame.display.update()
