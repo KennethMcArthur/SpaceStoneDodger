@@ -68,7 +68,10 @@ class Starfield(fld.Field_of):
 
         Star.external_speed_modifier = speed_modifier    
 
-
+    def other_stuff_for_each(self, element) -> None:
+        if self.stop_all:
+            if element.speed > 0:
+                element.speed = 0.5
 
 
 
