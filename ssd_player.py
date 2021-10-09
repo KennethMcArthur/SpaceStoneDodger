@@ -98,6 +98,14 @@ class Player_pawn(pygame.sprite.Sprite):
             self.y -= self.SHIP_SPEED
 
 
+    def god_mode(self, activated: bool) -> None:
+        """ Allows to set invincible mmode for testing and cinematics, in god mode you can't pick up powerups """
+        if activated:
+            self.invul_timer = -1
+        else:
+            self.invul_timer = 0
+
+
     def game_tick_update(self, window):
         if self.cpu_controlled:
             self.automove()
