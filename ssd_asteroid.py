@@ -21,11 +21,16 @@ class Asteroid(pygame.sprite.Sprite):
     external_speed_modifier = 1
 
     def __init__(self, x: int, y: int, speed: int) -> None:
-        self.scale = randint(24, 128)
+        self.set_scale(randint(24, 128))
+        self.relocate(x, y, speed)
+
+
+    def set_scale(self, new_scale: int) -> None:
+        """ Sets a fixed scale for this asteroid """
+        self.scale = new_scale
         self.this_sprite_image = pygame.transform.scale(Asteroid.SPRITE_IMAGE, (self.scale, self.scale))
         self.radius = self.scale // 2 - self.scale//32 # Collision radius is 1/32 smaller than the sprite to help player
         self.rect = self.this_sprite_image.get_rect()
-        self.relocate(x, y, speed)
 
 
     def relocate(self, x: int, y: int, speed: int) -> None:
