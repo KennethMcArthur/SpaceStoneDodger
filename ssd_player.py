@@ -107,7 +107,7 @@ class Player_pawn(pygame.sprite.Sprite):
             self.sprite_image.set_alpha(125)
         else:
             self.sprite_image.set_alpha(255)
-            self.repair()
+            #self.repair() # Uncomment this to let ship repair itself
         
         self.rect.x, self.rect.y = self.x, self.y
         window.blit(self.sprite_image, (self.x, self.y))
