@@ -17,7 +17,7 @@ import ssd_scene_master_class as Scn
 
 class GameTutorial(Scn.Scene):
     def scene_related_init(self):
-        SIZE_TEXT_MEDIUM = 28
+        SIZE_TEXT_MEDIUM = 24
         SIZE_TEXT_SMALL = 18
         SIZE_TEXT_TINY = 14
         FIRST_COL = 50
@@ -32,8 +32,9 @@ class GameTutorial(Scn.Scene):
         self.player = plr.Player_pawn(FIRST_COL, FIRST_ROW)
         self.player_life_bar = plr.Lifebar(self.player)
         self.asteroid = ast.Asteroid(FIRST_COL, SECOND_ROW, 0)
+        self.asteroid.set_scale(48)
         self.powerup = pwr.PowerUp(FIRST_COL, THIRD_ROW, 0)
-        self.player_label = txt.StaticText("Move with W,A,S,D", SIZE_TEXT_MEDIUM, (SECOND_COL, FIRST_ROW))
+        self.player_label = txt.StaticText("Move with W,A,S,D (or arrows)", SIZE_TEXT_MEDIUM, (SECOND_COL, FIRST_ROW))
         self.asteroid_label = txt.StaticText("Avoid asteroids", SIZE_TEXT_MEDIUM, (SECOND_COL, SECOND_ROW))
         self.powerup_label = txt.StaticText("Collect valuable scraps", SIZE_TEXT_MEDIUM, (SECOND_COL, THIRD_ROW))
         self.player_life_bar_label = txt.StaticText("Your life", SIZE_TEXT_TINY, (CST.SCREEN_WIDTH, 50), CST.TXT.RIGHT)
