@@ -19,9 +19,9 @@ class GameTutorial(Scn.Scene):
     def scene_related_init(self):
         SIZE_TEXT_MEDIUM = 24
         SIZE_TEXT_SMALL = 18
-        SIZE_TEXT_TINY = 14
+        SIZE_TEXT_TINY = 12
         FIRST_COL = 50
-        SECOND_COL = 150
+        SECOND_COL = 120
         FIRST_ROW = CST.SCREEN_HEIGHT // 4 * 1
         SECOND_ROW = CST.SCREEN_HEIGHT // 4 * 2
         THIRD_ROW = CST.SCREEN_HEIGHT // 4 * 3
@@ -34,12 +34,12 @@ class GameTutorial(Scn.Scene):
         self.asteroid = ast.Asteroid(FIRST_COL, SECOND_ROW, 0)
         self.asteroid.set_scale(48)
         self.powerup = pwr.PowerUp(FIRST_COL, THIRD_ROW, 0)
-        self.player_label = txt.StaticText("Move with W,A,S,D (or arrows)", SIZE_TEXT_MEDIUM, (SECOND_COL, FIRST_ROW))
-        self.asteroid_label = txt.StaticText("Avoid asteroids", SIZE_TEXT_MEDIUM, (SECOND_COL, SECOND_ROW))
-        self.powerup_label = txt.StaticText("Collect valuable scraps", SIZE_TEXT_MEDIUM, (SECOND_COL, THIRD_ROW))
-        self.player_life_bar_label = txt.StaticText("Your life", SIZE_TEXT_TINY, (CST.SCREEN_WIDTH, 50), CST.TXT.RIGHT)
-        self.goto_menu_label = txt.StaticText("[M] back to Menu", SIZE_TEXT_SMALL, (0, BOTTOM_ROW), CST.TXT.LEFT)
-        self.goto_play_label = txt.StaticText("[P] Play the game", SIZE_TEXT_SMALL, (CST.SCREEN_WIDTH, BOTTOM_ROW), CST.TXT.RIGHT)
+        self.player_label = txt.AnimatedTypedText(CST.TEXT_DB[100], SIZE_TEXT_MEDIUM, (SECOND_COL, FIRST_ROW), 1)
+        self.asteroid_label = txt.AnimatedTypedText(CST.TEXT_DB[101], SIZE_TEXT_MEDIUM, (SECOND_COL, SECOND_ROW), 1)
+        self.powerup_label = txt.AnimatedTypedText(CST.TEXT_DB[102], SIZE_TEXT_MEDIUM, (SECOND_COL, THIRD_ROW), 1)
+        self.player_life_bar_label = txt.StaticText(CST.TEXT_DB[103], SIZE_TEXT_TINY, (CST.SCREEN_WIDTH, 50), CST.TXT.RIGHT)
+        self.goto_menu_label = txt.StaticText("[M] " + CST.TEXT_DB[104], SIZE_TEXT_SMALL, (0, BOTTOM_ROW), CST.TXT.LEFT)
+        self.goto_play_label = txt.StaticText("[P] " + CST.TEXT_DB[105], SIZE_TEXT_SMALL, (CST.SCREEN_WIDTH, BOTTOM_ROW), CST.TXT.RIGHT)
 
         # Append order is draw order
         self.updatelist.append(self.level_background)
@@ -55,6 +55,9 @@ class GameTutorial(Scn.Scene):
         self.updatelist.append(self.goto_menu_label)
         self.updatelist.append(self.goto_play_label)
 
+        self.player_label.skip_animation()
+        self.asteroid_label.skip_animation()
+        self.powerup_label.skip_animation()
 
     def keys_to_check(self, key_list: list) -> None:
         self.player.handle_movement(key_list)
