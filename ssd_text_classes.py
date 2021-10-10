@@ -111,6 +111,11 @@ class AnimatedTypedText:
         self.active = False
 
 
+    def skip_animation(self) -> None:
+        """ Shows the entire text without animating it """
+        self.letters_shown = len(self.total_text)
+
+
     def game_tick_update(self, window: pygame.Surface) -> None:
         if not self.active:
             return
