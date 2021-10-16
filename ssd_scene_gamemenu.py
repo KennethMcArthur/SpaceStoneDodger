@@ -29,9 +29,9 @@ class GameMenu(Scn.Scene):
         self.starfield = stf.Starfield(15)
         self.player = plr.Player_pawn(CST.SCREEN_WIDTH // 2 - 16, CST.SCREEN_HEIGHT // 2 - 16)
         self.text_title = txt.StaticText("Space Stone Dodger", SIZE_TEXT_BIG, TITLE_COORDS, CST.TXT.CENTER)
-        self.text_subtitle = txt.StaticText(CST.TEXT_DB[1], SIZE_TEXT_TINY, SUBTITLE_COORDS, CST.TXT.CENTER)
-        self.text_goto_play = txt.StaticText("[P] " + CST.TEXT_DB[2], SIZE_TEXT_MEDIUM, BOTTOM_TEXT_COORDS_LEFT, CST.TXT.LEFT)
-        self.text_goto_tutorial = txt.StaticText("[T] " + CST.TEXT_DB[3], SIZE_TEXT_MEDIUM, BOTTOM_TEXT_COORDS_RIGHT, CST.TXT.RIGHT)
+        self.text_subtitle = txt.StaticText(CST.get_text("MENU001"), SIZE_TEXT_TINY, SUBTITLE_COORDS, CST.TXT.CENTER)
+        self.text_goto_play = txt.StaticText("[P] " + CST.get_text("MENU002"), SIZE_TEXT_MEDIUM, BOTTOM_TEXT_COORDS_LEFT, CST.TXT.LEFT)
+        self.text_goto_tutorial = txt.StaticText("[T] " + CST.get_text("MENU003"), SIZE_TEXT_MEDIUM, BOTTOM_TEXT_COORDS_RIGHT, CST.TXT.RIGHT)
         
         # Append order is draw order
         self.updatelist.append(self.level_background)

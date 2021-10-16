@@ -34,12 +34,12 @@ class GameTutorial(Scn.Scene):
         self.asteroid = ast.Asteroid(FIRST_COL, SECOND_ROW, 0)
         self.asteroid.set_scale(48)
         self.powerup = pwr.PowerUp(FIRST_COL, THIRD_ROW, 0)
-        self.player_label = txt.AnimatedTypedText(CST.TEXT_DB[100], SIZE_TEXT_MEDIUM, (SECOND_COL, FIRST_ROW), 1)
-        self.asteroid_label = txt.AnimatedTypedText(CST.TEXT_DB[101], SIZE_TEXT_MEDIUM, (SECOND_COL, SECOND_ROW), 1)
-        self.powerup_label = txt.AnimatedTypedText(CST.TEXT_DB[102], SIZE_TEXT_MEDIUM, (SECOND_COL, THIRD_ROW), 1)
-        self.player_life_bar_label = txt.StaticText(CST.TEXT_DB[103], SIZE_TEXT_TINY, (CST.SCREEN_WIDTH, 50), CST.TXT.RIGHT)
-        self.goto_menu_label = txt.StaticText("[M] " + CST.TEXT_DB[104], SIZE_TEXT_SMALL, (0, BOTTOM_ROW), CST.TXT.LEFT)
-        self.goto_play_label = txt.StaticText("[P] " + CST.TEXT_DB[105], SIZE_TEXT_SMALL, (CST.SCREEN_WIDTH, BOTTOM_ROW), CST.TXT.RIGHT)
+        self.player_label = txt.AnimatedTypedText(CST.get_text("TUTORIAL001"), SIZE_TEXT_MEDIUM, (SECOND_COL, FIRST_ROW), 1)
+        self.asteroid_label = txt.AnimatedTypedText(CST.get_text("TUTORIAL002"), SIZE_TEXT_MEDIUM, (SECOND_COL, SECOND_ROW), 1)
+        self.powerup_label = txt.AnimatedTypedText(CST.get_text("TUTORIAL003"), SIZE_TEXT_MEDIUM, (SECOND_COL, THIRD_ROW), 1)
+        self.player_life_bar_label = txt.StaticText(CST.get_text("TUTORIAL004"), SIZE_TEXT_TINY, (CST.SCREEN_WIDTH, 50), CST.TXT.RIGHT)
+        self.goto_menu_label = txt.StaticText("[M] " + CST.get_text("TUTORIAL005"), SIZE_TEXT_SMALL, (0, BOTTOM_ROW), CST.TXT.LEFT)
+        self.goto_play_label = txt.StaticText("[P] " + CST.get_text("TUTORIAL006"), SIZE_TEXT_SMALL, (CST.SCREEN_WIDTH, BOTTOM_ROW), CST.TXT.RIGHT)
 
         # Append order is draw order
         self.updatelist.append(self.level_background)

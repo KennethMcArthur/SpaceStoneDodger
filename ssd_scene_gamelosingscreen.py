@@ -23,9 +23,9 @@ class GameLosingScreen(Scn.Scene):
         BOTTOM_ROW = CST.SCREEN_HEIGHT - SIZE_TEXT_SMALL
 
         self.level_background = bg.Background()
-        self.text_title = txt.StaticText(CST.TEXT_DB[301], SIZE_TEXT_BIG, TITLE_COORDS, CST.TXT.CENTER)
-        self.goto_menu_label = txt.StaticText("[M] " + CST.TEXT_DB[302], SIZE_TEXT_SMALL, (0, BOTTOM_ROW), CST.TXT.LEFT)
-        self.goto_play_label = txt.StaticText("[P] " + CST.TEXT_DB[303], SIZE_TEXT_SMALL, (CST.SCREEN_WIDTH, BOTTOM_ROW), CST.TXT.RIGHT)
+        self.text_title = txt.StaticText(CST.get_text("LOSE001"), SIZE_TEXT_BIG, TITLE_COORDS, CST.TXT.CENTER)
+        self.goto_menu_label = txt.StaticText("[M] " + CST.get_text("LOSE002"), SIZE_TEXT_SMALL, (0, BOTTOM_ROW), CST.TXT.LEFT)
+        self.goto_play_label = txt.StaticText("[P] " + CST.get_text("LOSE003"), SIZE_TEXT_SMALL, (CST.SCREEN_WIDTH, BOTTOM_ROW), CST.TXT.RIGHT)
         
         self.updatelist.append(self.level_background)
         self.updatelist.append(self.text_title)

@@ -29,7 +29,7 @@ class GameLevel(Scn.Scene):
         self.ui_lifebar = plr.Lifebar(self.player)
         self.asteroid_field = ast.AsteroidField(self.num_asteroids, self.player)
         self.powerup_field = pwr.PowerUpField(self.num_power_ups, self.player)
-        self.score_label = txt.StaticText(CST.TEXT_DB[200] + ":", 14, (0,0), CST.TXT.LEFT)
+        self.score_label = txt.StaticText(CST.get_text("LEVEL000") + ":", 14, (0,0), CST.TXT.LEFT)
         self.navigator_text = txt.AnimatedTypedText("", 14, (30, 300), 20, autostart=False)
         self.movie_effect = mov.MovieEffect(80, 20)
 
@@ -97,7 +97,7 @@ class GameLevel(Scn.Scene):
             self.quit_loop(CST.SCENES.GAME_LOSING_SCREEN)
         if this_event.type == CST.POWER_UP_COLLECTED:
             self.score += 1
-            self.score_label.set_text(CST.TEXT_DB[200] + ": " + str(self.score))
+            self.score_label.set_text(CST.get_text("LEVEL000") + ": " + str(self.score))
 
 
     def keys_to_check(self, key_list: list) -> None:
@@ -133,22 +133,22 @@ class GameLevel(Scn.Scene):
         self.player.automove_to(50, CST.SCREEN_HEIGHT // 2)
 
     def tml_starting_speech_1(self) -> None:
-        this_event_text = CST.TEXT_DB[201]
+        this_event_text = CST.get_text("LEVEL001")
         self.navigator_text.set_text(this_event_text)
         self.navigator_text.start()
 
     def tml_starting_speech_2(self) -> None:
-        this_event_text = CST.TEXT_DB[202]
+        this_event_text = CST.get_text("LEVEL002")
         self.navigator_text.set_text(this_event_text)
         self.navigator_text.start()
 
     def tml_starting_speech_3(self) -> None:
-        this_event_text = CST.TEXT_DB[203]
+        this_event_text = CST.get_text("LEVEL003")
         self.navigator_text.set_text(this_event_text)
         self.navigator_text.start()
     
     def tml_starting_speech_4(self) -> None:
-        this_event_text = CST.TEXT_DB[204]
+        this_event_text = CST.get_text("LEVEL004")
         self.navigator_text.set_text(this_event_text)
         self.navigator_text.start()
 
@@ -181,7 +181,7 @@ class GameLevel(Scn.Scene):
         self.num_power_ups = 2
         self.asteroid_field.resize(self.num_asteroids)
         self.powerup_field.resize(self.num_power_ups)
-        self.navigator_text.set_text(CST.TEXT_DB[205])
+        self.navigator_text.set_text(CST.get_text("LEVEL005"))
         self.navigator_text.start()
 
     def tml_swarm_1(self) -> None:
@@ -220,7 +220,7 @@ class GameLevel(Scn.Scene):
         self.num_power_ups = 3
         self.asteroid_field.resize(self.num_asteroids)
         self.powerup_field.resize(self.num_power_ups)
-        self.navigator_text.set_text(CST.TEXT_DB[206])
+        self.navigator_text.set_text(CST.get_text("LEVEL006"))
         self.navigator_text.start()
 
     def tml_swarm_2(self) -> None:
@@ -259,7 +259,7 @@ class GameLevel(Scn.Scene):
         self.num_power_ups = 8
         self.asteroid_field.resize(self.num_asteroids)
         self.powerup_field.resize(self.num_power_ups)
-        self.navigator_text.set_text(CST.TEXT_DB[207])
+        self.navigator_text.set_text(CST.get_text("LEVEL007"))
         self.navigator_text.start()
 
     def tml_swarm_3(self) -> None:
@@ -282,36 +282,36 @@ class GameLevel(Scn.Scene):
         self.player.automove_to(50, CST.SCREEN_HEIGHT // 2)
 
     def tml_end_cinematic_2(self) -> None:
-        this_event_text = CST.TEXT_DB[208]
+        this_event_text = CST.get_text("LEVEL008")
         self.navigator_text.set_text(this_event_text)
         self.navigator_text.start()
 
     def tml_end_cinematic_3(self) -> None:
-        this_event_text = CST.TEXT_DB[209]
+        this_event_text = CST.get_text("LEVEL009")
         self.navigator_text.set_text(this_event_text)
         self.navigator_text.start()
 
     def tml_end_cinematic_4(self) -> None:
         self.num_power_ups = 60
         self.powerup_field.resize(self.num_power_ups)
-        this_event_text = CST.TEXT_DB[210]
+        this_event_text = CST.get_text("LEVEL010")
         self.navigator_text.set_text(this_event_text)
         self.navigator_text.start()
 
     def tml_end_cinematic_5(self) -> None:
-        this_event_text = CST.TEXT_DB[211]
+        this_event_text = CST.get_text("LEVEL011")
         self.navigator_text.set_text(this_event_text)
         self.navigator_text.start()
         self.powerup_field.stop_movements()
         self.starfield.stop_movements()
 
     def tml_end_cinematic_6(self) -> None:
-        this_event_text = CST.TEXT_DB[212]
+        this_event_text = CST.get_text("LEVEL012")
         self.navigator_text.set_text(this_event_text)
         self.navigator_text.start()
     
     def tml_end_cinematic_7(self) -> None:
-        this_event_text = CST.TEXT_DB[213]
+        this_event_text = CST.get_text("LEVEL013")
         self.navigator_text.set_text(this_event_text)
         self.navigator_text.start()
         self.player.automove_to(CST.SCREEN_WIDTH + 100, CST.SCREEN_HEIGHT // 2)
