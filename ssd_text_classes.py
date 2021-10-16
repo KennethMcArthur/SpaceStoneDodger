@@ -135,82 +135,6 @@ class AnimatedTypedText:
 
 
 
-class StaticTextWrappable:
-    """ Class for wrappable static text """
-    def __init__(self, text: str, size: int, position: tuple, alignment: int = 0) -> None:
-        self.alignment = alignment # Default is left
-        self.pos_x, self.pos_y = position
-        self.rows_and_rects = {} # text rows as keys, their rect as values
-        self.titlefont = pygame.font.Font(CST.TITLE_FONT, size)
-        self.set_text(text)
-
-
-    def set_text(self, new_text: str) -> None:
-        """ Updates the text """
-        self._generate_row_surfaces(new_text) # setting up the full text
-
-
-    def place_me(self, this_surface, its_coords: tuple) -> None:
-        """ Aligns a given surface to the chosen aligment """
-        if self.alignment == CST.TXT.LEFT:
-            this_surface.topleft = its_coords
-        elif self.alignment == CST.TXT.CENTER:
-            this_surface.center = its_coords
-        elif self.alignment == CST.TXT.RIGHT:
-            this_surface.topright = its_coords
-
-
-    def _generate_row_surfaces(self, new_text: str) -> None:
-        """ Updates the text and builds the rows dict"""
-        char_height = self.titlefont.size(new_text)[1]
-        row_count = 0
-        for row in self._rowify(new_text):
-            this_row_surface = self.titlefont.render(row, True, CST.COLOR_WHITE)
-            this_row_y = self.pos_y + row_count * char_height
-            self.rows_and_rects[row] = this_row_surface.get_rect().move(self.pos_x, this_row_y)
-            self.place_me(self.rows_and_rects[row], (self.pos_x, this_row_y))
-            row_count += 1
-
-
-    def _rowify(self, new_text: str) -> list:
-        """ Splits the entire text into shorter rows """
-        final_row_list = []
-        for phrase in new_text.split('\n'):
-            max_width = self._calculate_max_width(phrase, CST.SCREEN_WIDTH)
-            while len(phrase) > max_width:
-                if ' ' in phrase[:max_width]:
-                    right_space = phrase[:max_width].rfind(' ')
-                else:
-                    right_space = max_width
-
-                final_row_list.append(phrase[:right_space].strip())
-                phrase = phrase[right_space:].lstrip()
-            final_row_list.append(phrase)
-        return final_row_list
-
-
-    def _calculate_max_width(self, text: str, right_limit: int) -> int:
-        """ Calculates how many characters a text can have without breaking the right limit """
-        max_chars = len(text)
-        starting_point = 0
-        if self.alignment == CST.TXT.LEFT:
-            starting_point = self.pos_x
-        elif self.alignment == CST.TXT.CENTER:
-            starting_point = self.pos_x // 2
-        elif self.alignment == CST.TXT.RIGHT:
-            starting_point = 0
-        while self.titlefont.size(text[:max_chars])[0] + starting_point >= right_limit:
-            max_chars -= 1
-        return max_chars
-
-
-    def game_tick_update(self, window: pygame.Surface) -> None:
-        for row in self.rows_and_rects.keys():
-            this_row = self.titlefont.render(row, True, CST.COLOR_WHITE)
-            window.blit(this_row, self.rows_and_rects[row])
-
-
-
 
 
 
@@ -229,7 +153,6 @@ if __name__ == "__main__":
     
     testbg = bg.Background()
     dummy_static_text = StaticText("Center", 32, (CST.SCREEN_WIDTH//2, 100), CST.TXT.CENTER)
-    dummy_centered_wrappable = StaticTextWrappable("Centered text that should wrap but actually it doesn't work as expected", 24, (CST.SCREEN_WIDTH//2, 300), CST.TXT.CENTER)
     dummy_left_text = StaticText("Left", 32, (50, 50), CST.TXT.LEFT)
     dummy_right_text = StaticText("Right", 32, (CST.SCREEN_WIDTH-50, 150), CST.TXT.RIGHT)
     dummy_animated_text = AnimatedTypedText(
@@ -241,8 +164,7 @@ if __name__ == "__main__":
     updatelist.append(dummy_static_text)
     updatelist.append(dummy_left_text)
     updatelist.append(dummy_right_text)
-    #updatelist.append(dummy_animated_text)
-    updatelist.append(dummy_centered_wrappable)
+    updatelist.append(dummy_animated_text)
 
     test_counter = 0
 
