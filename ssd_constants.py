@@ -156,7 +156,7 @@ class TXT:
 class TextDB:
     """ Inner class to manage languages and text """
     current_text_db = { "LANGUAGE": "no_language_loaded"}
-    placeholder_text = "???"
+    placeholder_text = "???" # To be displayed if the language selected doesn't have a key
 
     # Setting English as default language (if present)
     for lang in get_every_languages():
