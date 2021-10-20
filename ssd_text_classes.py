@@ -43,6 +43,7 @@ class AnimatedTypedText:
             1: one letter per second
             2: one letter every half a second
             ...and so on """
+        self.sfx_text_tick = CST.SFX_TEXT_TICK
         self.pos_x, self.pos_y = position
         self.titlefont = pygame.font.Font(CST.TITLE_FONT, size)
 
@@ -116,6 +117,12 @@ class AnimatedTypedText:
         self.letters_shown = len(self.total_text)
 
 
+    def play_sound_effect(self) -> None:
+        current_letter_index = min(self.letters_shown, len(self.total_text)-1)
+        if self.total_text[current_letter_index] != ' ':
+            self.sfx_text_tick.play()
+
+
     def game_tick_update(self, window: pygame.Surface) -> None:
         if not self.active:
             return
@@ -126,6 +133,7 @@ class AnimatedTypedText:
             if self.frame_counter % self.speed_break_point == 0:
                 self.frame_counter = 0
                 self.letters_shown += 1
+                self.play_sound_effect()
             self._generate_row_surfaces(self.total_text[:self.letters_shown])
         
         for row in self.rows_and_rects.keys():

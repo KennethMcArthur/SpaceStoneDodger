@@ -4,6 +4,8 @@
 import pygame, os, json
 from collections import defaultdict
 
+pygame.mixer.init()
+
 
 # HELPER FUNCTIONS
 # ----------------
@@ -15,6 +17,16 @@ def load_image(asset_folder: str, filename: str) -> pygame.Surface:
         return pygame.image.load(fullname)
     except Exception as message:
         print("Cannot load image:", filename)
+        raise SystemExit(message)
+
+
+def load_audio(audio_asset_folder: str, filename: str) -> pygame.mixer.Sound:
+    """ Error handling audio loading function """
+    fullname = os.path.join(audio_asset_folder, filename)
+    try:
+        return pygame.mixer.Sound(fullname)
+    except Exception as message:
+        print("Cannot load audio:", filename)
         raise SystemExit(message)
 
 
@@ -50,6 +62,24 @@ def get_every_languages() -> list():
     return langlist
 
 
+def set_music_volume(new_volume: float) -> None:
+    """ Sets the main music volume """
+    AudioSettings.set_music_volume(new_volume)
+
+
+def get_music_volume() -> float:
+    """ Returns the current main music volume """
+    return AudioSettings.get_volumes()[1]
+
+
+def set_sfx_volume(new_volume: float) -> None:
+    AudioSettings.set_sfx_volume(new_volume)
+
+
+def get_sfx_volume() -> float:
+    """ Returns the current main sfx volume """
+    return AudioSettings.get_volumes()[0]
+
 
 
 
@@ -74,6 +104,9 @@ PLAYER_REPAIR_TIME = 5 # how many SECONDS the player's ship takes for fully repa
 PLAYER_INVULNERABILITY_DURATION = 3 # how many SECONDS the player's ship invulnerability lasts
 
 POWER_UP_SPEED = 3
+
+AUDIO_SFX_VOLUME = 0.2
+AUDIO_MUSIC_VOLUME = 0.2
 
 
 
@@ -112,13 +145,17 @@ KEYBINDINGS = {
 
 # Assets Constants
 ASSET_DIR = "assets"
+AUDIO_ASSET_DIR = "Audio"
+AUDIO_SFX_DIR = os.path.join(ASSET_DIR, AUDIO_ASSET_DIR, "SFX")
+AUDIO_MUSIC_DIR = os.path.join(ASSET_DIR, AUDIO_ASSET_DIR, "MUSIC")
 TRANSLATIONS_FOLDER = "lang"
 SHIP_SPRITE = load_image(ASSET_DIR, "Ship.png")
 ASTEROID_SPRITE = load_image(ASSET_DIR, "asteroid.png")
 SPACE_BG = load_image(ASSET_DIR, "purple_space_bg.png") # by Digital Moons (https://digitalmoons.itch.io/)
 METAL_SCRAP_SPRITE = load_image(ASSET_DIR, "metal_scrap2.png")
 TITLE_FONT = os.path.join(ASSET_DIR, "kongtext.ttf") # Font by codeman38 | cody@zone38.net | http://www.zone38.net/
-
+SFX_POWERUP_COLLECTED = load_audio(AUDIO_SFX_DIR, "sci-fi-positive-notification.wav")
+SFX_TEXT_TICK = load_audio(AUDIO_SFX_DIR, "tick_001b.ogg")
 
 # Custom Pygame Events
 PLAYER_HIT = pygame.USEREVENT + 1
@@ -173,6 +210,29 @@ class TextDB:
         """ Sets a language dict as the current one """
         cls.current_text_db = chosen_language
 
+
+class AudioSettings:
+    """ Inner class to manage audio level across scenes """
+
+    sfx_volume = AUDIO_SFX_VOLUME
+    music_volume = AUDIO_MUSIC_VOLUME
+
+    @classmethod
+    def get_volumes(cls) -> tuple:
+        """ Returns a tuple of floats (sfx_audio, music_audio) """
+        return (cls.sfx_volume, cls.music_volume)
+
+    @classmethod
+    def set_sfx_volume(cls, new_volume: float) -> None:
+        """ Sets the current volume for sfx clamped into 0.0 and 1.0 """
+        new_volume = max(0.0, min(1.0, new_volume))
+        cls.sfx_volume = new_volume
+
+    @classmethod
+    def set_music_volume(cls, new_volume: float) -> None:
+        """ Sets the current volume for music clamped into 0.0 and 1.0 """
+        new_volume = max(0.0, min(1.0, new_volume))
+        cls.music_volume = new_volume
 
 
 

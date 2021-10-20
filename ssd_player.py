@@ -11,6 +11,7 @@ class Player_pawn(pygame.sprite.Sprite):
     """ Player class """
 
     def __init__(self, start_x: int, start_y: int) -> None:
+        self.powerup_collected_sound = CST.SFX_POWERUP_COLLECTED
         self.sprite_image = CST.SHIP_SPRITE
         self.x = start_x
         self.y = start_y
@@ -104,6 +105,16 @@ class Player_pawn(pygame.sprite.Sprite):
             self.invul_timer = -1
         else:
             self.invul_timer = 0
+
+
+    def set_audio_volume(self, new_volume: float) -> None:
+        """ Sets the volume for this object's sound """
+        self.powerup_collected_sound.set_volume(new_volume)
+
+
+    def powerup_collected(self) -> None:
+        """ Plays the collection sound """
+        self.powerup_collected_sound.play()
 
 
     def game_tick_update(self, window):

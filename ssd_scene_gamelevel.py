@@ -96,6 +96,7 @@ class GameLevel(Scn.Scene):
         if this_event.type == CST.PLAYER_DEAD:
             self.quit_loop(CST.SCENES.GAME_LOSING_SCREEN)
         if this_event.type == CST.POWER_UP_COLLECTED:
+            self.player.powerup_collected()
             self.score += 1
             self.score_label.set_text(CST.get_text("LEVEL000") + ": " + str(self.score))
 
@@ -339,7 +340,7 @@ def main_game():
     #game_level.timer_seconds_passed = 268
     #game_level.keypress_allowed = True
     #game_level.movie_effect.start_animation()
-    game_level.player.god_mode(True) # Keep player invulnerable for testing purpose"""
+    #game_level.player.god_mode(True) # Keep player invulnerable for testing purpose"""
 
     # Scene sequence, each scene returns the index for the next one
     while True:
