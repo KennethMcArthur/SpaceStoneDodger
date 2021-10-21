@@ -20,11 +20,21 @@ def load_image(asset_folder: str, filename: str) -> pygame.Surface:
         raise SystemExit(message)
 
 
-def load_audio(audio_asset_folder: str, filename: str) -> pygame.mixer.Sound:
+def load_audio_sfx(audio_asset_folder: str, filename: str) -> pygame.mixer.Sound:
     """ Error handling audio loading function """
     fullname = os.path.join(audio_asset_folder, filename)
     try:
         return pygame.mixer.Sound(fullname)
+    except Exception as message:
+        print("Cannot load audio:", filename)
+        raise SystemExit(message)
+
+
+def load_audio_music(audio_asset_folder: str, filename: str) -> None:
+    """ Error handling audio loading function """
+    fullname = os.path.join(audio_asset_folder, filename)
+    try:
+        pygame.mixer.music.load(fullname)
     except Exception as message:
         print("Cannot load audio:", filename)
         raise SystemExit(message)
@@ -154,8 +164,8 @@ ASTEROID_SPRITE = load_image(ASSET_DIR, "asteroid.png")
 SPACE_BG = load_image(ASSET_DIR, "purple_space_bg.png") # by Digital Moons (https://digitalmoons.itch.io/)
 METAL_SCRAP_SPRITE = load_image(ASSET_DIR, "metal_scrap2.png")
 TITLE_FONT = os.path.join(ASSET_DIR, "kongtext.ttf") # Font by codeman38 | cody@zone38.net | http://www.zone38.net/
-SFX_POWERUP_COLLECTED = load_audio(AUDIO_SFX_DIR, "sci-fi-positive-notification.wav")
-SFX_TEXT_TICK = load_audio(AUDIO_SFX_DIR, "tick_001b.ogg")
+SFX_POWERUP_COLLECTED = load_audio_sfx(AUDIO_SFX_DIR, "sci-fi-positive-notification.wav")
+SFX_TEXT_TICK = load_audio_sfx(AUDIO_SFX_DIR, "beep.wav")
 
 # Custom Pygame Events
 PLAYER_HIT = pygame.USEREVENT + 1

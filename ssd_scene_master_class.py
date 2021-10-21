@@ -64,8 +64,14 @@ class Scene:
         self.looping_active = True
 
 
+    def load_and_start_music(self) -> None:
+        """ To be overridden to manage a Scene starting music """
+        pass
+
+
     def run(self) -> int:
         """ Main loop method """
+        self.load_and_start_music() # Starting music only when Scene is active
         time = t.time()
         unprocessed = 0
         FRAME_CAP = 1.0 / CST.FPS # How many millisecons needs to pass each frame

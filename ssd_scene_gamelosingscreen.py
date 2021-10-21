@@ -32,6 +32,7 @@ class GameLosingScreen(Scn.Scene):
         self.updatelist.append(self.goto_menu_label)
         self.updatelist.append(self.goto_play_label)
 
+
     def keys_to_check(self, key_list: list):
         if CST.pressed("M", key_list):
             self.quit_loop(CST.SCENES.GAME_MENU)
@@ -39,6 +40,11 @@ class GameLosingScreen(Scn.Scene):
             self.quit_loop(CST.SCENES.GAME_LEVEL)
 
 
+    def load_and_start_music(self) -> None:
+        # Music stuff
+        CST.load_audio_music(CST.AUDIO_MUSIC_DIR, "Power Bots Loop.ogg")
+        pygame.mixer.music.set_volume(CST.get_music_volume())
+        pygame.mixer.music.play(loops = -1)
 
 
 
