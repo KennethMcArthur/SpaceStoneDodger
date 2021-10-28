@@ -116,9 +116,7 @@ class GameLevel(Scn.Scene):
 
     def load_and_start_music(self) -> None:
         # Music stuff
-        CST.load_audio_music(CST.AUDIO_MUSIC_DIR, "background-loop-melodic-techno-04-3822.ogg")
-        pygame.mixer.music.set_volume(CST.get_music_volume())
-        pygame.mixer.music.play(loops = -1)
+        CST.Jukebox.playsong("background-loop-melodic-techno-04-3822.ogg")
 
 
     # Timeline related methods
@@ -305,10 +303,8 @@ class GameLevel(Scn.Scene):
         this_event_text = CST.get_text("LEVEL010")
         self.navigator_text.set_text(this_event_text)
         self.navigator_text.start()
-        pygame.mixer.music.stop()
-        pygame.mixer.music.unload()
-        CST.load_audio_music(CST.AUDIO_MUSIC_DIR, "bensound-scifi.ogg")
-        pygame.mixer.music.play(fade_ms=3000)
+        CST.Jukebox.stopmusic()
+        CST.Jukebox.playsong("bensound-scifi.ogg")
 
     def tml_end_cinematic_5(self) -> None:
         this_event_text = CST.get_text("LEVEL011")

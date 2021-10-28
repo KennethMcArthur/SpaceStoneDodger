@@ -42,9 +42,7 @@ class GameLosingScreen(Scn.Scene):
 
     def load_and_start_music(self) -> None:
         # Music stuff
-        CST.load_audio_music(CST.AUDIO_MUSIC_DIR, "Power Bots Loop.ogg")
-        pygame.mixer.music.set_volume(CST.get_music_volume())
-        pygame.mixer.music.play(loops = -1)
+        CST.Jukebox.playsong("Power Bots Loop.ogg")
 
 
 

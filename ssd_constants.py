@@ -245,6 +245,33 @@ class AudioSettings:
         cls.music_volume = new_volume
 
 
+class Jukebox:
+    """ Interface to manage pygame.mixer.music singleton """
+
+    current_song = None
+    pygame.mixer.music.set_volume(AudioSettings.get_volumes()[1])
+
+    @classmethod
+    def playsong(cls, songfile: str, howmanytimes: int = -1, songs_folder: str = AUDIO_MUSIC_DIR) -> None:
+        """ Starts the selected song if it's different from the current one """
+        if pygame.mixer.music.get_busy() and songfile == cls.current_song:
+            return # Let the song play
+        
+        cls.current_song = songfile
+        pygame.mixer.music.stop()
+        pygame.mixer.music.unload()
+        pygame.mixer.music.load(os.path.join(songs_folder, songfile))
+        pygame.mixer.music.play(loops=howmanytimes)
+
+    @classmethod
+    def stopmusic(cls) -> None:
+        """ Stops the curret playing music """
+        pygame.mixer.music.stop()
+    
+    @classmethod
+    def update_volume(cls) -> None:
+        """ Gets the music volume setting and sets it as current """
+        pygame.mixer.music.set_volume(Audiosettings.get_volume()[1])
 
 
 # Testing
