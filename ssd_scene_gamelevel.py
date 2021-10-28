@@ -116,7 +116,7 @@ class GameLevel(Scn.Scene):
 
     def load_and_start_music(self) -> None:
         # Music stuff
-        CST.Jukebox.playsong("background-loop-melodic-techno-04-3822.ogg")
+        CST.Jukebox.playsong(CST.MUSIC_GAMELEVEL)
 
 
     # Timeline related methods
@@ -304,7 +304,7 @@ class GameLevel(Scn.Scene):
         self.navigator_text.set_text(this_event_text)
         self.navigator_text.start()
         CST.Jukebox.stopmusic()
-        CST.Jukebox.playsong("bensound-scifi.ogg")
+        CST.Jukebox.playsong(CST.MUSIC_ENDCINEMATIC)
 
     def tml_end_cinematic_5(self) -> None:
         this_event_text = CST.get_text("LEVEL011")

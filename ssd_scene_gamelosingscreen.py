@@ -42,7 +42,7 @@ class GameLosingScreen(Scn.Scene):
 
     def load_and_start_music(self) -> None:
         # Music stuff
-        CST.Jukebox.playsong("Power Bots Loop.ogg")
+        CST.Jukebox.playsong(CST.MUSIC_LOSINGSCREEN)
 
 
 

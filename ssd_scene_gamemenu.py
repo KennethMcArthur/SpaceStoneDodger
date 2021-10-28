@@ -53,7 +53,7 @@ class GameMenu(Scn.Scene):
 
     def load_and_start_music(self) -> None:
         # Music stuff
-        CST.Jukebox.playsong("joystock-neon-lights.ogg")
+        CST.Jukebox.playsong(CST.MUSIC_MENU)
 
 
 
