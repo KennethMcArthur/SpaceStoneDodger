@@ -12,6 +12,7 @@ class Player_pawn(pygame.sprite.Sprite):
 
     def __init__(self, start_x: int, start_y: int) -> None:
         self.powerup_collected_sound = CST.SFX_POWERUP_COLLECTED
+        self.impact_sound = CST.SFX_ASTEROID_IMPACT
         self.sprite_image = CST.SHIP_SPRITE
         self.x = start_x
         self.y = start_y
@@ -49,6 +50,7 @@ class Player_pawn(pygame.sprite.Sprite):
         """ Manages what happens when the player gets hit """
         if self.invul_timer == 0:
             self.health -= 1
+            self.impact_sound.play()
             if self.health == 0:
                 pygame.event.post(pygame.event.Event(game_over_event))
             self.invul_timer = CST.PLAYER_INVULNERABILITY_DURATION * CST.FPS

@@ -165,6 +165,7 @@ SPACE_BG = load_image(ASSET_DIR, "purple_space_bg.png") # by Digital Moons (http
 METAL_SCRAP_SPRITE = load_image(ASSET_DIR, "metal_scrap2.png")
 TITLE_FONT = os.path.join(ASSET_DIR, "kongtext.ttf") # Font by codeman38 | cody@zone38.net | http://www.zone38.net/
 SFX_POWERUP_COLLECTED = load_audio_sfx(AUDIO_SFX_DIR, "sci-fi-positive-notification.wav")
+SFX_ASTEROID_IMPACT = load_audio_sfx(AUDIO_SFX_DIR, "impactPlate_heavy_004.ogg")
 SFX_TEXT_TICK = load_audio_sfx(AUDIO_SFX_DIR, "beep.wav")
 MUSIC_MENU = "joystock-neon-lights.ogg"
 MUSIC_LOSINGSCREEN = "Power Bots Loop.ogg"
