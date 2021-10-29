@@ -94,7 +94,9 @@ class GameLevel(Scn.Scene):
         if this_event.type == CST.PLAYER_HIT:
             self.player.got_hit(CST.PLAYER_DEAD)
         if this_event.type == CST.PLAYER_DEAD:
-            self.quit_loop(CST.SCENES.GAME_LOSING_SCREEN)
+            self.updatelist.remove(self.player)
+            self.timeline.clear()
+            self.timeline[self.timer_seconds_passed + 5] = self.tml_player_dead
         if this_event.type == CST.POWER_UP_COLLECTED:
             self.player.powerup_collected()
             self.score += 1
@@ -327,6 +329,10 @@ class GameLevel(Scn.Scene):
     def tml_end_of_scene(self) -> None:
         """ End of scene, onward to credits! """
         self.quit_loop(CST.SCENES.GAME_MENU)
+    
+    def tml_player_dead(self) -> None:
+        """ This event will take place of every timeline entry after player's death """
+        self.quit_loop(CST.SCENES.GAME_LOSING_SCREEN)
 
 
 
@@ -344,7 +350,7 @@ def main_game():
     next_scene = 0
 
     # Skipping intro for testing purpose
-    #game_level.timer_seconds_passed = 260
+    #game_level.timer_seconds_passed = 100
     #game_level.keypress_allowed = True
     #game_level.movie_effect.start_animation()
     #game_level.player.god_mode(True) # Keep player invulnerable for testing purpose"""
