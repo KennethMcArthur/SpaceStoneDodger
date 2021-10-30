@@ -151,6 +151,9 @@ KEYBINDINGS = {
     "T": (
         pygame.K_t,
     ),
+    "O": (
+        pygame.K_o,
+    ),
 }
 
 
@@ -194,6 +197,7 @@ class SCENES:
     GAME_TUTORIAL = 1
     GAME_LEVEL = 2
     GAME_LOSING_SCREEN = 3
+    GAME_OPTIONS = 4
 
 
 # Text alignment
@@ -278,7 +282,7 @@ class Jukebox:
     @classmethod
     def update_volume(cls) -> None:
         """ Gets the music volume setting and sets it as current """
-        pygame.mixer.music.set_volume(Audiosettings.get_volume()[1])
+        pygame.mixer.music.set_volume(AudioSettings.get_volumes()[1])
 
 
 # Testing
