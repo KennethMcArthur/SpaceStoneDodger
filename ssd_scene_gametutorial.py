@@ -56,12 +56,13 @@ class GameTutorial(Scn.Scene):
         self.updatelist.append(self.goto_play_label)
 
 
-    def keys_to_check(self, key_list: list) -> None:
-        self.player.handle_movement(key_list)
-        if CST.pressed("M", key_list):
-            self.quit_loop(CST.SCENES.GAME_MENU)
-        if CST.pressed("P", key_list):
-            self.quit_loop(CST.SCENES.GAME_LEVEL)
+    def event_checking(self, this_event: pygame.event) -> None:
+        super().event_checking(this_event) # handles quit event
+        if this_event.type == pygame.KEYDOWN:
+            if this_event.key == pygame.K_m:
+                self.quit_loop(CST.SCENES.GAME_MENU)
+            if this_event.key == pygame.K_p:
+                self.quit_loop(CST.SCENES.GAME_LEVEL)
 
 
     def text_to_update(self):
