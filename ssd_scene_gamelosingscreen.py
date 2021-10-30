@@ -23,7 +23,7 @@ class GameLosingScreen(Scn.Scene):
         BOTTOM_ROW = CST.SCREEN_HEIGHT - SIZE_TEXT_SMALL
 
         self.level_background = bg.Background()
-        self.text_title = txt.StaticText(CST.get_text("LOSE001"), SIZE_TEXT_BIG, TITLE_COORDS, CST.TXT.CENTER)
+        self.text_title = txt.AnimatedTypedText(CST.get_text("LOSE001"), SIZE_TEXT_BIG, (50, CST.SCREEN_HEIGHT // 3), 20)
         self.goto_menu_label = txt.StaticText("[M] " + CST.get_text("LOSE002"), SIZE_TEXT_SMALL, (0, BOTTOM_ROW), CST.TXT.LEFT)
         self.goto_play_label = txt.StaticText("[P] " + CST.get_text("LOSE003"), SIZE_TEXT_SMALL, (CST.SCREEN_WIDTH, BOTTOM_ROW), CST.TXT.RIGHT)
         
@@ -33,12 +33,14 @@ class GameLosingScreen(Scn.Scene):
         self.updatelist.append(self.goto_play_label)
 
 
-    def keys_to_check(self, key_list: list):
-        if CST.pressed("M", key_list):
-            self.quit_loop(CST.SCENES.GAME_MENU)
-        if CST.pressed("P", key_list):
-            self.quit_loop(CST.SCENES.GAME_LEVEL)
-
+    def event_checking(self, this_event: pygame.event) -> None:
+        super().event_checking(this_event) # handles quit event
+        if this_event.type == pygame.KEYDOWN:
+            if this_event.key == pygame.K_m:
+                self.quit_loop(CST.SCENES.GAME_MENU)
+            if this_event.key == pygame.K_p:
+                self.quit_loop(CST.SCENES.GAME_LEVEL)
+        
 
     def load_and_start_music(self):
         # Music stuff
