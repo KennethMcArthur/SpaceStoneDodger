@@ -28,5 +28,7 @@
 "LOSE002": "back to Menu",
 "LOSE003": "Play again",
 "OPTIONS001": "Sound",
-"OPTIONS002": "Music"
+"OPTIONS002": "Music",
+"OPTIONS003": "Volumes",
+"OPTIONS004": "Language"
 }

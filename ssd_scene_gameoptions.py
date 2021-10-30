@@ -13,11 +13,11 @@ import ssd_scene_master_class as Scn
 
 class GameOptions(Scn.Scene):
     def scene_related_init(self):
+        SIZE_TEXT_BIG = 34
         SIZE_TEXT_MEDIUM = 24
         SIZE_TEXT_SMALL = 18
         SIZE_TEXT_TINY = 12
-        FIRST_COL = 50
-        SECOND_COL = 120
+        CENTERSCREEN = CST.SCREEN_WIDTH // 2
         FIRST_ROW = CST.SCREEN_HEIGHT // 4 * 1
         SECOND_ROW = FIRST_ROW + 50
         THIRD_ROW = CST.SCREEN_HEIGHT // 4 * 3
@@ -26,17 +26,20 @@ class GameOptions(Scn.Scene):
         self.dummy_sound = CST.SFX_POWERUP_COLLECTED
 
         self.level_background = bg.Background()
-        self.sounds_label = txt.StaticText(self.get_sound_string(), SIZE_TEXT_MEDIUM, (CST.SCREEN_WIDTH // 2, FIRST_ROW), CST.TXT.CENTER)
-        self.music_label = txt.StaticText(self.get_music_string(), SIZE_TEXT_MEDIUM, (CST.SCREEN_WIDTH // 2, SECOND_ROW), CST.TXT.CENTER)
-        self.language_label = txt.StaticText(self.get_language_string(), SIZE_TEXT_MEDIUM, (CST.SCREEN_WIDTH // 2, THIRD_ROW), CST.TXT.CENTER)    
+        self.volumes_title = txt.StaticText(CST.get_text("OPTIONS003"), SIZE_TEXT_BIG, (CENTERSCREEN, FIRST_ROW - SIZE_TEXT_BIG *1.5), CST.TXT.CENTER)
+        self.sounds_label = txt.StaticText(self.get_sound_string(), SIZE_TEXT_MEDIUM, (CENTERSCREEN, FIRST_ROW), CST.TXT.CENTER)
+        self.music_label = txt.StaticText(self.get_music_string(), SIZE_TEXT_MEDIUM, (CENTERSCREEN, SECOND_ROW), CST.TXT.CENTER)
+        self.language_title = txt.StaticText(CST.get_text("OPTIONS004"), SIZE_TEXT_BIG, (CENTERSCREEN, THIRD_ROW - SIZE_TEXT_BIG *1.5), CST.TXT.CENTER)
+        self.language_label = txt.StaticText(self.get_language_string(), SIZE_TEXT_MEDIUM, (CENTERSCREEN, THIRD_ROW), CST.TXT.CENTER)    
         self.goto_menu_label = txt.StaticText("[M] " + CST.get_text("TUTORIAL005"), SIZE_TEXT_SMALL, (0, BOTTOM_ROW), CST.TXT.LEFT)
 
         # Append order is draw order
         self.updatelist.append(self.level_background)
+        self.updatelist.append(self.volumes_title)
         self.updatelist.append(self.sounds_label)
         self.updatelist.append(self.music_label)
+        self.updatelist.append(self.language_title)
         self.updatelist.append(self.language_label)
-        
         self.updatelist.append(self.goto_menu_label)
 
 
@@ -99,6 +102,9 @@ class GameOptions(Scn.Scene):
         self.music_label.set_text(self.get_music_string())
         self.language_label.set_text(self.get_language_string())
         self.goto_menu_label.set_text("[M] " + CST.get_text("TUTORIAL005"))
+        self.volumes_title.set_text(CST.get_text("OPTIONS003"))
+        self.language_title.set_text(CST.get_text("OPTIONS004"))
+        
 
 
 # TESTING
