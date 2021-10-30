@@ -11,7 +11,7 @@
 "TUTORIAL006": "Play the game",
 "LEVEL000": "Metals",
 "LEVEL001": "Ok Pilot, I'm Navigator and I'll help you in today's mission. Look how cool it sounds when you call it 'mission'",
-"LEVEL002": "Our job is to collect metal scraps from space and then sell it for money, it ain't much but it's honest work, like my grand-grand-father used to say on earth.",
+"LEVEL002": "Our job is to collect metal scraps from space and then sell it for money, it ain't much but it's honest work, like my grand-grand-father used to say on Earth.",
 "LEVEL003": "Today we detected an unusual asteroid activity not far from Quasari Station, this means that we'll surely find a lot of metal parts around there (you know, impacts).\nWe just need to collect as much scraps as we can, and with a Station nearby we could sell the stuff there.",
 "LEVEL004": "Avoid asteroids and don't get hit too much.\nWe can handle a couple of hits, but three strikes and we're out. So try your best.\nOnward to Quasari Station, then.",
 "LEVEL005": "Watch out! Lots of stones ahead!",
@@ -25,5 +25,7 @@
 "LEVEL013": "...to be continued",
 "LOSE001": "Sadly, stones Won",
 "LOSE002": "back to Menu",
-"LOSE003": "Play again"
+"LOSE003": "Play again",
+"OPTIONS001": "Sound",
+"OPTIONS002": "Music"
 }
