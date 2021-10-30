@@ -142,18 +142,6 @@ KEYBINDINGS = {
     "SPACE": (
         pygame.K_SPACE,
     ),
-    "P": (
-        pygame.K_p,
-    ),
-    "M": (
-        pygame.K_m,
-    ),
-    "T": (
-        pygame.K_t,
-    ),
-    "O": (
-        pygame.K_o,
-    ),
 }
 
 
