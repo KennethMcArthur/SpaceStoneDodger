@@ -69,9 +69,14 @@ class Scene:
         pass
 
 
+    def text_to_update(self) -> None:
+        """ To be overridden to update any text at the beginning of the scene """
+        pass
+
     def run(self) -> int:
         """ Main loop method """
         self.load_and_start_music() # Starting music only when Scene is active
+        self.text_to_update()
         time = t.time()
         unprocessed = 0
         FRAME_CAP = 1.0 / CST.FPS # How many millisecons needs to pass each frame

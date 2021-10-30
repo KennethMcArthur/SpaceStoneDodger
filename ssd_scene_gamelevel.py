@@ -116,9 +116,13 @@ class GameLevel(Scn.Scene):
         self.__init__(self.GAME_WINDOW) # Forcing the level to initial state when playing again
 
 
-    def load_and_start_music(self) -> None:
+    def load_and_start_music(self):
         # Music stuff
         CST.Jukebox.playsong(CST.MUSIC_GAMELEVEL)
+
+
+    def text_to_update(self):
+        self.score_label.set_text(CST.get_text("LEVEL000") + ":")
 
 
     # Timeline related methods

@@ -55,9 +55,6 @@ class GameTutorial(Scn.Scene):
         self.updatelist.append(self.goto_menu_label)
         self.updatelist.append(self.goto_play_label)
 
-        self.player_label.skip_animation()
-        self.asteroid_label.skip_animation()
-        self.powerup_label.skip_animation()
 
     def keys_to_check(self, key_list: list) -> None:
         self.player.handle_movement(key_list)
@@ -66,7 +63,17 @@ class GameTutorial(Scn.Scene):
         if CST.pressed("P", key_list):
             self.quit_loop(CST.SCENES.GAME_LEVEL)
 
-  
+
+    def text_to_update(self):
+        self.player_label.set_text(CST.get_text("TUTORIAL001"))
+        self.asteroid_label.set_text(CST.get_text("TUTORIAL002"))
+        self.powerup_label.set_text(CST.get_text("TUTORIAL003"))
+        self.player_life_bar_label.set_text(CST.get_text("TUTORIAL004"))
+        self.goto_menu_label.set_text("[M] " + CST.get_text("TUTORIAL005"))
+        self.goto_play_label.set_text("[P] " + CST.get_text("TUTORIAL006"))
+        self.player_label.skip_animation()
+        self.asteroid_label.skip_animation()
+        self.powerup_label.skip_animation()
 
 
 

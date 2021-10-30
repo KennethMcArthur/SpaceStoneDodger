@@ -99,6 +99,7 @@ class AnimatedTypedText:
     def set_text(self, new_text: str) -> None:
         """ Allows external text setting """
         self.total_text = new_text
+        self._generate_row_surfaces(new_text)
 
 
     def start(self):

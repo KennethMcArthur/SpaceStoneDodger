@@ -45,17 +45,23 @@ class GameMenu(Scn.Scene):
 
     def keys_to_check(self, key_list: list):
         self.player.handle_movement(key_list)
+        if CST.pressed("O", key_list):
+            self.quit_loop(CST.SCENES.GAME_OPTIONS)
         if CST.pressed("P", key_list):
             self.quit_loop(CST.SCENES.GAME_LEVEL)
         if CST.pressed("T", key_list):
             self.quit_loop(CST.SCENES.GAME_TUTORIAL)
 
 
-    def load_and_start_music(self) -> None:
+    def load_and_start_music(self):
         # Music stuff
         CST.Jukebox.playsong(CST.MUSIC_MENU)
 
 
+    def text_to_update(self):
+        self.text_subtitle.set_text(CST.get_text("MENU001"))
+        self.text_goto_play.set_text("[P] " + CST.get_text("MENU002"))
+        self.text_goto_tutorial.set_text("[T] " + CST.get_text("MENU003"))
 
 
 # TESTING

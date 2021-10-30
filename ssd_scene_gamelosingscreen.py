@@ -40,10 +40,15 @@ class GameLosingScreen(Scn.Scene):
             self.quit_loop(CST.SCENES.GAME_LEVEL)
 
 
-    def load_and_start_music(self) -> None:
+    def load_and_start_music(self):
         # Music stuff
         CST.Jukebox.playsong(CST.MUSIC_LOSINGSCREEN)
 
+
+    def text_to_update(self):
+        self.text_title.set_text(CST.get_text("LOSE001"))
+        self.goto_menu_label.set_text("[M] " + CST.get_text("LOSE002"))
+        self.goto_play_label.set_text("[P] " + CST.get_text("LOSE003"))
 
 
 
