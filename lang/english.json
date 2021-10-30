@@ -3,6 +3,7 @@
 "MENU001": "a simple game where you, well, dodge stones",
 "MENU002": "Play",
 "MENU003": "Tutorial",
+"MENU004": "Options",
 "TUTORIAL001": "Move with W,A,S,D (or arrows)\nBoost the ship with SPACE",
 "TUTORIAL002": "Avoid asteroids",
 "TUTORIAL003": "Collect valuable scraps",

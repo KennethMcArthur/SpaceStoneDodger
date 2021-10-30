@@ -24,6 +24,7 @@ class GameMenu(Scn.Scene):
         SUBTITLE_COORDS = (CST.SCREEN_WIDTH // 2, CST.SCREEN_HEIGHT * 0.2 + 48)
         BOTTOM_TEXT_COORDS_LEFT = (0, CST.SCREEN_HEIGHT - SIZE_TEXT_MEDIUM)
         BOTTOM_TEXT_COORDS_RIGHT = (CST.SCREEN_WIDTH, CST.SCREEN_HEIGHT - SIZE_TEXT_MEDIUM)
+        OPTION_COORDS = (CST.SCREEN_WIDTH // 2, CST.SCREEN_HEIGHT - SIZE_TEXT_TINY)
 
         self.level_background = bg.Background()
         self.starfield = stf.Starfield(15)
@@ -32,6 +33,7 @@ class GameMenu(Scn.Scene):
         self.text_subtitle = txt.StaticText(CST.get_text("MENU001"), SIZE_TEXT_TINY, SUBTITLE_COORDS, CST.TXT.CENTER)
         self.text_goto_play = txt.StaticText("[P] " + CST.get_text("MENU002"), SIZE_TEXT_MEDIUM, BOTTOM_TEXT_COORDS_LEFT, CST.TXT.LEFT)
         self.text_goto_tutorial = txt.StaticText("[T] " + CST.get_text("MENU003"), SIZE_TEXT_MEDIUM, BOTTOM_TEXT_COORDS_RIGHT, CST.TXT.RIGHT)
+        self.text_goto_options = txt.StaticText("[O] " + CST.get_text("MENU004"), SIZE_TEXT_TINY, OPTION_COORDS, CST.TXT.CENTER)
         
         # Append order is draw order
         self.updatelist.append(self.level_background)
@@ -41,16 +43,22 @@ class GameMenu(Scn.Scene):
         self.updatelist.append(self.text_subtitle)
         self.updatelist.append(self.text_goto_play)
         self.updatelist.append(self.text_goto_tutorial)
+        self.updatelist.append(self.text_goto_options)
 
 
     def keys_to_check(self, key_list: list):
         self.player.handle_movement(key_list)
-        if CST.pressed("O", key_list):
-            self.quit_loop(CST.SCENES.GAME_OPTIONS)
-        if CST.pressed("P", key_list):
-            self.quit_loop(CST.SCENES.GAME_LEVEL)
-        if CST.pressed("T", key_list):
-            self.quit_loop(CST.SCENES.GAME_TUTORIAL)
+        
+
+    def event_checking(self, this_event: pygame.event) -> None:
+        super().event_checking(this_event) # handles quit event
+        if this_event.type == pygame.KEYDOWN:
+            if this_event.key == pygame.K_o:
+                self.quit_loop(CST.SCENES.GAME_OPTIONS)
+            if this_event.key == pygame.K_p:
+                self.quit_loop(CST.SCENES.GAME_LEVEL)
+            if this_event.key == pygame.K_t:
+                self.quit_loop(CST.SCENES.GAME_TUTORIAL)
 
 
     def load_and_start_music(self):
@@ -62,6 +70,7 @@ class GameMenu(Scn.Scene):
         self.text_subtitle.set_text(CST.get_text("MENU001"))
         self.text_goto_play.set_text("[P] " + CST.get_text("MENU002"))
         self.text_goto_tutorial.set_text("[T] " + CST.get_text("MENU003"))
+        self.text_goto_options.set_text("[O] " + CST.get_text("MENU004"))
 
 
 # TESTING
