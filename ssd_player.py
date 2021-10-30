@@ -13,6 +13,7 @@ class Player_pawn(pygame.sprite.Sprite):
     def __init__(self, start_x: int, start_y: int) -> None:
         self.powerup_collected_sound = CST.SFX_POWERUP_COLLECTED
         self.impact_sound = CST.SFX_ASTEROID_IMPACT
+        self.death_sound = CST.SFX_PLAYER_DEATH
         self.sprite_image = CST.SHIP_SPRITE
         self.x = start_x
         self.y = start_y
@@ -50,11 +51,19 @@ class Player_pawn(pygame.sprite.Sprite):
         """ Manages what happens when the player gets hit """
         if self.invul_timer == 0:
             self.health -= 1
-            self.impact_sound.play()
+            self.play_impact_sound()
             if self.health == 0:
                 pygame.event.post(pygame.event.Event(game_over_event))
             self.invul_timer = CST.PLAYER_INVULNERABILITY_DURATION * CST.FPS
             self.repair_timer = self.REPAIR_TIME # Resetting repair state upon hit
+
+
+    def play_impact_sound(self) -> None:
+        """ Plays an impact sounds based on current health """
+        if self.health == 0:
+            self.death_sound.play()
+            return
+        self.impact_sound.play()
 
 
     def is_invulnerable(self) -> bool:
