@@ -141,3 +141,6 @@ dmypy.json
 
 # Openoffice files:
 *.ods
+
+# Archives
+*.zip
