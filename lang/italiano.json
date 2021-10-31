@@ -11,7 +11,7 @@
 "TUTORIAL005": "torna al Menu",
 "TUTORIAL006": "Gioca",
 "LEVEL000": "Metalli",
-"LEVEL001": "Ok Pilota, Sono Nav e ti aiutero' nella missione di oggi. Adoro come suona professionale chiamarla 'missione'",
+"LEVEL001": "Ok Pilota, Sono Nav e ti aiutero' nella missione di oggi. Adoro come suona professionale chiamarla 'missione'.",
 "LEVEL002": "Il nostro lavoro e' raccogliere detriti e rimasugli di metalli e rivenderli, non e' molto ma e' un lavoro onesto, come diceva il mio bis-bis-nonno sulla Terra.",
 "LEVEL003": "Oggi abbiamo captato un'insolita attivita' di asteroidi non lontano dalla stazione Quasari, di sicuro riusciremo a trovare una buona quantita' di metalli nelle vicinanze (sai, gli impatti ecc...).\nDobbiamo solo andare li', raccogliere piu' metalli possibili e rivendere tutto alla stazione vicina.",
 "LEVEL004": "Evita gli asteroidi e non farti colpire troppo.\nPossiamo reggere un paio di colpi, ma al terzo strike siamo fuori. Metticela tutta.\nForza, verso la stazione Quasari!",
@@ -30,5 +30,16 @@
 "OPTIONS001": "Suono",
 "OPTIONS002": "Musica",
 "OPTIONS003": "Volumi",
-"OPTIONS004": "Lingua"
+"OPTIONS004": "Lingua",
+"CREDITS001": "PROGRAMMAZIONE",
+"CREDITS002": "GRAFICA",
+"CREDITS003": "Carattere",
+"CREDITS004": "Sfondo",
+"CREDITS005": "Grafica rimanente",
+"CREDITS006": "SUONI",
+"CREDITS007": "Suoni per impatto e morte",
+"CREDITS008": "Suono del testo",
+"CREDITS009": "Suono dei detriti metallici",
+"CREDITS010": "MUSICHE",
+"CREDITS011": "Grazie per aver giocato!!"
 }

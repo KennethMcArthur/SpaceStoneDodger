@@ -10,6 +10,7 @@ import ssd_scene_gametutorial as SceneTutorial
 import ssd_scene_gamelevel as SceneLevel
 import ssd_scene_gamelosingscreen as SceneLose
 import ssd_scene_gameoptions as SceneOptions
+import ssd_scene_gamecredits as SceneCredits
 
 
 
@@ -29,6 +30,7 @@ def main_game():
     game_level = SceneLevel.GameLevel(WIN)
     game_losing_screen = SceneLose.GameLosingScreen(WIN)
     game_options = SceneOptions.GameOptions(WIN)
+    game_credits = SceneCredits.GameCredits(WIN)
 
     scenelist = [
         game_menu,
@@ -36,6 +38,7 @@ def main_game():
         game_level,
         game_losing_screen,
         game_options,
+        game_credits
     ]
 
     next_scene = CST.SCENES.GAME_MENU

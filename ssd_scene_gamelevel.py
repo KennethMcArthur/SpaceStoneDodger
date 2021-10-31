@@ -332,7 +332,7 @@ class GameLevel(Scn.Scene):
 
     def tml_end_of_scene(self) -> None:
         """ End of scene, onward to credits! """
-        self.quit_loop(CST.SCENES.GAME_MENU)
+        self.quit_loop(CST.SCENES.GAME_CREDITS)
     
     def tml_player_dead(self) -> None:
         """ This event will take place of every timeline entry after player's death """
@@ -357,7 +357,7 @@ def main_game():
     #game_level.timer_seconds_passed = 100
     #game_level.keypress_allowed = True
     #game_level.movie_effect.start_animation()
-    #game_level.player.god_mode(True) # Keep player invulnerable for testing purpose"""
+    #game_level.player.god_mode(True) # Keep player invulnerable for testing purpose
 
     # Scene sequence, each scene returns the index for the next one
     while True:

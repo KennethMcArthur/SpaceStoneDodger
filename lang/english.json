@@ -30,5 +30,16 @@
 "OPTIONS001": "Sound",
 "OPTIONS002": "Music",
 "OPTIONS003": "Volumes",
-"OPTIONS004": "Language"
+"OPTIONS004": "Language",
+"CREDITS001": "CODING",
+"CREDITS002": "GRAPHICS",
+"CREDITS003": "Font",
+"CREDITS004": "Background",
+"CREDITS005": "All other graphics",
+"CREDITS006": "SOUNDS",
+"CREDITS007": "Sounds for impact and death",
+"CREDITS008": "Sound for text tick",
+"CREDITS009": "Sound for scrap metals",
+"CREDITS010": "MUSICS",
+"CREDITS011": "Thanks for playing!!"
 }

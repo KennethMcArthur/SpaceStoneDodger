@@ -186,6 +186,7 @@ class SCENES:
     GAME_LEVEL = 2
     GAME_LOSING_SCREEN = 3
     GAME_OPTIONS = 4
+    GAME_CREDITS = 5
 
 
 # Text alignment

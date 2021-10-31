@@ -59,6 +59,8 @@ class GameMenu(Scn.Scene):
                 self.quit_loop(CST.SCENES.GAME_LEVEL)
             if this_event.key == pygame.K_t:
                 self.quit_loop(CST.SCENES.GAME_TUTORIAL)
+            if this_event.key == pygame.K_c:
+                self.quit_loop(CST.SCENES.GAME_CREDITS)
 
 
     def load_and_start_music(self):
