@@ -2,21 +2,21 @@
 # This is my first game
 
 
+import sys
+sys.path.append("src")
 
 import pygame
-import ssd_constants as CST
-import ssd_scene_gamemenu as SceneMenu
-import ssd_scene_gametutorial as SceneTutorial
-import ssd_scene_gamelevel as SceneLevel
-import ssd_scene_gamelosingscreen as SceneLose
-import ssd_scene_gameoptions as SceneOptions
-import ssd_scene_gamecredits as SceneCredits
-
+from src import ssd_constants as CST
+from src import ssd_scene_gamemenu as SceneMenu
+from src import ssd_scene_gametutorial as SceneTutorial
+from src import ssd_scene_gamelevel as SceneLevel
+from src import ssd_scene_gamelosingscreen as SceneLose
+from src import ssd_scene_gameoptions as SceneOptions
+from src import ssd_scene_gamecredits as SceneCredits
 
 
 
 pygame.init()
-
 
 
 
