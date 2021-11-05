@@ -12,6 +12,49 @@ import ssd_scene_master_class as Scn
 
 
 
+class CreditsMovingText(txt.StaticText):
+    """ New type of static text that moves. Yeah, it's silly. """
+
+    default_text_speed = 1
+    boosted_text_speed = 5
+    is_boosted = False
+
+
+    def game_tick_update(self, window: pygame.Surface):
+        super().game_tick_update(window)
+        # Moving text up, ready for the next frame
+        self.pos_y -= CreditsMovingText.get_current_speed()
+        self.place_me()
+
+
+    def is_offscreen_top(self) -> bool:
+        """ Returns if the text is outside the top boundary of the screen """
+        return self.pos_y < (0 - self.titlerect.height)
+
+
+    @classmethod
+    def get_current_speed(cls) -> int:
+        """ Returns the current speed (boosted or not) """
+        # if is_boosted is False, boosted_text_speed will be multiplied by zero
+        return max(cls.default_text_speed, cls.boosted_text_speed * cls.is_boosted)
+
+
+    @classmethod
+    def set_speeds(cls, new_def_speed: int, new_boosted_speed: int) -> None:
+        """ Allows setting a new base speed for text """
+        cls.default_text_speed = new_def_speed
+        cls.boosted_text_speed = new_boosted_speed
+
+
+    @classmethod
+    def boost(cls, state: bool) -> None:
+        """ Allows to set the value of is_boosted variable """
+        cls.is_boosted = state
+
+
+
+
+
 class GameCredits(Scn.Scene):
     def scene_related_init(self):
         SIZE_TEXT_BIGTITLE = 48
@@ -20,6 +63,7 @@ class GameCredits(Scn.Scene):
         CENTER_X = CST.SCREEN_WIDTH // 2
 
         self.CREDIT_SPEED = 1 # text speed in pixels
+        self.CREDIT_BOOSTED_SPEED = self.CREDIT_SPEED * 5
 
         FIRST_POS = CST.SCREEN_HEIGHT + SIZE_TEXT_BIGTITLE
         BLANK_ROW = 50
@@ -61,38 +105,38 @@ class GameCredits(Scn.Scene):
         self.level_background = bg.Background()
         self.starfield = stf.Starfield(15)
 
-        self.text_bigtitle = txt.StaticText("", SIZE_TEXT_BIGTITLE, (CENTER_X, self.get_row(0)), CST.TXT.CENTER)
-        self.text_coding_title = txt.StaticText("", SIZE_TEXT_CATEGORIES, (CENTER_X, self.get_row(1)), CST.TXT.CENTER)
-        self.text_coding_content = txt.StaticText("", SIZE_TEXT_REGULAR, (CENTER_X, self.get_row(2)), CST.TXT.CENTER)
-        self.text_graphics_title = txt.StaticText("", SIZE_TEXT_CATEGORIES, (CENTER_X, self.get_row(3)), CST.TXT.CENTER)
-        self.text_font_title = txt.StaticText("", SIZE_TEXT_CATEGORIES, (CENTER_X, self.get_row(4)), CST.TXT.CENTER)
-        self.text_font_creator = txt.StaticText("", SIZE_TEXT_REGULAR, (CENTER_X, self.get_row(5)), CST.TXT.CENTER)
-        self.text_font_link = txt.StaticText("", SIZE_TEXT_REGULAR, (CENTER_X, self.get_row(6)), CST.TXT.CENTER)
-        self.text_background_title = txt.StaticText("", SIZE_TEXT_CATEGORIES, (CENTER_X, self.get_row(7)), CST.TXT.CENTER)
-        self.text_background_creator = txt.StaticText("", SIZE_TEXT_REGULAR, (CENTER_X, self.get_row(8)), CST.TXT.CENTER)
-        self.text_background_link = txt.StaticText("", SIZE_TEXT_REGULAR, (CENTER_X, self.get_row(9)), CST.TXT.CENTER)
-        self.text_other_graphics_title = txt.StaticText("", SIZE_TEXT_CATEGORIES, (CENTER_X, self.get_row(10)), CST.TXT.CENTER)
-        self.text_other_graphics_author = txt.StaticText("", SIZE_TEXT_REGULAR, (CENTER_X, self.get_row(11)), CST.TXT.CENTER)
-        self.text_sounds_title = txt.StaticText("", SIZE_TEXT_CATEGORIES, (CENTER_X, self.get_row(12)), CST.TXT.CENTER)
-        self.text_sounds_impactdeath = txt.StaticText("", SIZE_TEXT_CATEGORIES, (CENTER_X, self.get_row(13)), CST.TXT.CENTER)
-        self.text_sounds_impactdeath_creator = txt.StaticText("", SIZE_TEXT_REGULAR, (CENTER_X, self.get_row(14)), CST.TXT.CENTER)
-        self.text_sounds_impactdeath_link = txt.StaticText("", SIZE_TEXT_REGULAR, (CENTER_X, self.get_row(15)), CST.TXT.CENTER)
-        self.text_sounds_texttick = txt.StaticText("", SIZE_TEXT_CATEGORIES, (CENTER_X, self.get_row(16)), CST.TXT.CENTER)
-        self.text_sounds_texttick_creator = txt.StaticText("", SIZE_TEXT_REGULAR, (CENTER_X, self.get_row(17)), CST.TXT.CENTER)
-        self.text_sounds_texttick_link = txt.StaticText("", SIZE_TEXT_REGULAR, (CENTER_X, self.get_row(18)), CST.TXT.CENTER)
-        self.text_sounds_powerup = txt.StaticText("", SIZE_TEXT_CATEGORIES, (CENTER_X, self.get_row(19)), CST.TXT.CENTER)
-        self.text_sounds_powerup_creator = txt.StaticText("", SIZE_TEXT_REGULAR, (CENTER_X, self.get_row(20)), CST.TXT.CENTER)
-        self.text_sounds_powerup_link = txt.StaticText("", SIZE_TEXT_REGULAR, (CENTER_X, self.get_row(21)), CST.TXT.CENTER)
-        self.text_music_title = txt.StaticText("", SIZE_TEXT_CATEGORIES, (CENTER_X, self.get_row(22)), CST.TXT.CENTER)
-        self.text_music_songname1 = txt.StaticText("", SIZE_TEXT_REGULAR, (CENTER_X, self.get_row(23)), CST.TXT.CENTER)
-        self.text_music_songauthor1 = txt.StaticText("", SIZE_TEXT_REGULAR, (CENTER_X, self.get_row(24)), CST.TXT.CENTER)
-        self.text_music_songname2 = txt.StaticText("", SIZE_TEXT_REGULAR, (CENTER_X, self.get_row(25)), CST.TXT.CENTER)
-        self.text_music_songauthor2 = txt.StaticText("", SIZE_TEXT_REGULAR, (CENTER_X, self.get_row(26)), CST.TXT.CENTER)
-        self.text_music_songname3 = txt.StaticText("", SIZE_TEXT_REGULAR, (CENTER_X, self.get_row(27)), CST.TXT.CENTER)
-        self.text_music_songauthor3 = txt.StaticText("", SIZE_TEXT_REGULAR, (CENTER_X, self.get_row(28)), CST.TXT.CENTER)
-        self.text_music_songname4 = txt.StaticText("", SIZE_TEXT_REGULAR, (CENTER_X, self.get_row(29)), CST.TXT.CENTER)
-        self.text_music_songauthor4 = txt.StaticText("", SIZE_TEXT_REGULAR, (CENTER_X, self.get_row(30)), CST.TXT.CENTER)
-        self.text_final_thanks = txt.StaticText("", SIZE_TEXT_CATEGORIES, (CENTER_X, self.get_row(31)), CST.TXT.CENTER)
+        self.text_bigtitle = CreditsMovingText("", SIZE_TEXT_BIGTITLE, (CENTER_X, self.get_row(0)), CST.TXT.CENTER)
+        self.text_coding_title = CreditsMovingText("", SIZE_TEXT_CATEGORIES, (CENTER_X, self.get_row(1)), CST.TXT.CENTER)
+        self.text_coding_content = CreditsMovingText("", SIZE_TEXT_REGULAR, (CENTER_X, self.get_row(2)), CST.TXT.CENTER)
+        self.text_graphics_title = CreditsMovingText("", SIZE_TEXT_CATEGORIES, (CENTER_X, self.get_row(3)), CST.TXT.CENTER)
+        self.text_font_title = CreditsMovingText("", SIZE_TEXT_CATEGORIES, (CENTER_X, self.get_row(4)), CST.TXT.CENTER)
+        self.text_font_creator = CreditsMovingText("", SIZE_TEXT_REGULAR, (CENTER_X, self.get_row(5)), CST.TXT.CENTER)
+        self.text_font_link = CreditsMovingText("", SIZE_TEXT_REGULAR, (CENTER_X, self.get_row(6)), CST.TXT.CENTER)
+        self.text_background_title = CreditsMovingText("", SIZE_TEXT_CATEGORIES, (CENTER_X, self.get_row(7)), CST.TXT.CENTER)
+        self.text_background_creator = CreditsMovingText("", SIZE_TEXT_REGULAR, (CENTER_X, self.get_row(8)), CST.TXT.CENTER)
+        self.text_background_link = CreditsMovingText("", SIZE_TEXT_REGULAR, (CENTER_X, self.get_row(9)), CST.TXT.CENTER)
+        self.text_other_graphics_title = CreditsMovingText("", SIZE_TEXT_CATEGORIES, (CENTER_X, self.get_row(10)), CST.TXT.CENTER)
+        self.text_other_graphics_author = CreditsMovingText("", SIZE_TEXT_REGULAR, (CENTER_X, self.get_row(11)), CST.TXT.CENTER)
+        self.text_sounds_title = CreditsMovingText("", SIZE_TEXT_CATEGORIES, (CENTER_X, self.get_row(12)), CST.TXT.CENTER)
+        self.text_sounds_impactdeath = CreditsMovingText("", SIZE_TEXT_CATEGORIES, (CENTER_X, self.get_row(13)), CST.TXT.CENTER)
+        self.text_sounds_impactdeath_creator = CreditsMovingText("", SIZE_TEXT_REGULAR, (CENTER_X, self.get_row(14)), CST.TXT.CENTER)
+        self.text_sounds_impactdeath_link = CreditsMovingText("", SIZE_TEXT_REGULAR, (CENTER_X, self.get_row(15)), CST.TXT.CENTER)
+        self.text_sounds_texttick = CreditsMovingText("", SIZE_TEXT_CATEGORIES, (CENTER_X, self.get_row(16)), CST.TXT.CENTER)
+        self.text_sounds_texttick_creator = CreditsMovingText("", SIZE_TEXT_REGULAR, (CENTER_X, self.get_row(17)), CST.TXT.CENTER)
+        self.text_sounds_texttick_link = CreditsMovingText("", SIZE_TEXT_REGULAR, (CENTER_X, self.get_row(18)), CST.TXT.CENTER)
+        self.text_sounds_powerup = CreditsMovingText("", SIZE_TEXT_CATEGORIES, (CENTER_X, self.get_row(19)), CST.TXT.CENTER)
+        self.text_sounds_powerup_creator = CreditsMovingText("", SIZE_TEXT_REGULAR, (CENTER_X, self.get_row(20)), CST.TXT.CENTER)
+        self.text_sounds_powerup_link = CreditsMovingText("", SIZE_TEXT_REGULAR, (CENTER_X, self.get_row(21)), CST.TXT.CENTER)
+        self.text_music_title = CreditsMovingText("", SIZE_TEXT_CATEGORIES, (CENTER_X, self.get_row(22)), CST.TXT.CENTER)
+        self.text_music_songname1 = CreditsMovingText("", SIZE_TEXT_REGULAR, (CENTER_X, self.get_row(23)), CST.TXT.CENTER)
+        self.text_music_songauthor1 = CreditsMovingText("", SIZE_TEXT_REGULAR, (CENTER_X, self.get_row(24)), CST.TXT.CENTER)
+        self.text_music_songname2 = CreditsMovingText("", SIZE_TEXT_REGULAR, (CENTER_X, self.get_row(25)), CST.TXT.CENTER)
+        self.text_music_songauthor2 = CreditsMovingText("", SIZE_TEXT_REGULAR, (CENTER_X, self.get_row(26)), CST.TXT.CENTER)
+        self.text_music_songname3 = CreditsMovingText("", SIZE_TEXT_REGULAR, (CENTER_X, self.get_row(27)), CST.TXT.CENTER)
+        self.text_music_songauthor3 = CreditsMovingText("", SIZE_TEXT_REGULAR, (CENTER_X, self.get_row(28)), CST.TXT.CENTER)
+        self.text_music_songname4 = CreditsMovingText("", SIZE_TEXT_REGULAR, (CENTER_X, self.get_row(29)), CST.TXT.CENTER)
+        self.text_music_songauthor4 = CreditsMovingText("", SIZE_TEXT_REGULAR, (CENTER_X, self.get_row(30)), CST.TXT.CENTER)
+        self.text_final_thanks = CreditsMovingText("", SIZE_TEXT_CATEGORIES, (CENTER_X, self.get_row(31)), CST.TXT.CENTER)
 
         # Append order is draw order
         self.updatelist.append(self.level_background)
@@ -131,6 +175,7 @@ class GameCredits(Scn.Scene):
         self.updatelist.append(self.text_final_thanks)
 
         self.text_to_update()
+        CreditsMovingText.set_speeds(self.CREDIT_SPEED, self.CREDIT_BOOSTED_SPEED)
 
 
     def load_and_start_music(self):
@@ -139,23 +184,19 @@ class GameCredits(Scn.Scene):
 
 
     def keys_to_check(self, key_list):
-        # I'm secretly overriding this method to do stuff each frame
-        for element in self.updatelist:
-            if isinstance(element, txt.StaticText):
-                element.pos_y -= self.CREDIT_SPEED
-                element.place_me()
         # Speed up if SPACE is pressed
-        self.CREDIT_SPEED = 1
+        CreditsMovingText.boost(False)
         if CST.pressed("SPACE", key_list):
-            self.CREDIT_SPEED = 5
+            CreditsMovingText.boost(True)
+
+        # I'm secretly overriding this method to do stuff each frame
         # Quit after the last text
-        if self.text_final_thanks.pos_y < -10:
+        if self.text_final_thanks.is_offscreen_top():
             CST.Jukebox.stopmusic()
             counter = 0
             for element in self.updatelist: # Resetting text positions
-                if isinstance(element, txt.StaticText):
+                if isinstance(element, CreditsMovingText):
                     element.pos_y = self.get_row(counter)
-                    element.place_me()
                     counter += 1
             self.quit_loop(CST.SCENES.GAME_MENU)
         
