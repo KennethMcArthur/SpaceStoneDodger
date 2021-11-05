@@ -88,7 +88,6 @@ class GameOptions(Scn.Scene):
                 break
 
         this_lang_index = (this_lang_index + 1) % len(languagelist)
-        print("New Index:", this_lang_index)
         CST.set_text_db(languagelist[this_lang_index])
 
     def play_dummy_sound(self) -> None:
