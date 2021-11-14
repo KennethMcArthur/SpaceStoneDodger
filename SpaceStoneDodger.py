@@ -23,6 +23,7 @@ pygame.init()
 def main_game():
     # Defining our game window
     WIN = pygame.display.set_mode((CST.SCREEN_WIDTH, CST.SCREEN_HEIGHT))
+    CST.convert_assets_surfaces() # Converts all surface sprites for better performances
     pygame.display.set_caption("Space Stone Dodger!")
 
     game_menu = SceneMenu.GameMenu(WIN)
@@ -50,5 +51,7 @@ def main_game():
 
 
 if __name__ == "__main__":
+    #import cProfile
+    #cProfile.run('main_game()', "new_stats.dat")
     main_game()
     

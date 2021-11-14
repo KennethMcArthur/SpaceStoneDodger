@@ -20,6 +20,18 @@ def load_image(asset_folder: str, filename: str) -> pygame.Surface:
         raise SystemExit(message)
 
 
+def convert_assets_surfaces():
+    """ Converts asset surfaces, to be called after setting up the display """
+    global SHIP_SPRITE
+    global ASTEROID_SPRITE
+    global SPACE_BG
+    global METAL_SCRAP_SPRITE
+    SHIP_SPRITE = SHIP_SPRITE.convert_alpha()
+    ASTEROID_SPRITE = ASTEROID_SPRITE.convert_alpha()
+    SPACE_BG = SPACE_BG.convert()
+    METAL_SCRAP_SPRITE = METAL_SCRAP_SPRITE.convert_alpha()
+
+
 def load_audio_sfx(audio_asset_folder: str, filename: str) -> pygame.mixer.Sound:
     """ Error handling audio loading function """
     fullname = os.path.join(audio_asset_folder, filename)
