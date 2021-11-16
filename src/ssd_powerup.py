@@ -75,10 +75,10 @@ class PowerUpField(fld.Field_of):
         """ Overriding from super() class to add collision checking """
         # Collisions checking, player can't get powerup if still invulnerable from a hit
         collided = pygame.sprite.collide_circle(element, self.player)
-        if collided and self.player.is_invulnerable() == False:
+        if collided and not self.player.is_invulnerable():
             pygame.event.post(pygame.event.Event(CST.POWER_UP_COLLECTED))
-            self.elements.remove(element) # PowerUps collected are removed
-            self.resize(len(self.elements)+1) # Refilling the elements list
+            # PowerUps collected are moved off screen to simulate their removal
+            element.relocate(-100, element.y, element.speed)
         
         if self.stop_all:
             if element.speed > 0:
@@ -101,7 +101,7 @@ if __name__ == "__main__":
     WIN = pygame.display.set_mode((CST.SCREEN_WIDTH, CST.SCREEN_HEIGHT))
     pygame.display.set_caption("Test Field")
     
-    num_powerup = 30
+    num_powerup = 4
     dummyplayer = plr.Player_pawn(50,50)
     testfield = PowerUpField(num_powerup, dummyplayer)
     testbg = bg.Background()
@@ -109,6 +109,7 @@ if __name__ == "__main__":
     updatelist = [] # Append order is draw order
     updatelist.append(testbg)
     updatelist.append(testfield)
+    updatelist.append(dummyplayer)
 
     test_counter = 1
 
@@ -133,11 +134,15 @@ if __name__ == "__main__":
             unprocessed -= FRAME_CAP
             can_render = True
 
+        # Key state capturing
+        keys_pressed = pygame.key.get_pressed() # Gets the bool state of all keyboard buttons
+        
+
         if can_render:
             # put everything inside here
             # Drawing sequence
             for gameobj in updatelist:
                 gameobj.game_tick_update(WIN) # All classes have this methods
-
+            dummyplayer.handle_movement(keys_pressed)
 
             pygame.display.update()
