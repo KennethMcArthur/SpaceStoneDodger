@@ -144,3 +144,7 @@ dmypy.json
 
 # Archives
 *.zip
+
+# Plain text and profiling binaries
+*.txt
+*.dat
