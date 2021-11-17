@@ -65,7 +65,7 @@ class PowerUpField(fld.Field_of):
     def handle_movement(self, keys_pressed: list) -> None:
         """ Manages the speed modifier of the field based on key pressing """
         speed_modifier = 1
-        if pressed("SPACE", keys_pressed): #left key
+        if pressed("SPACE", keys_pressed):
             speed_modifier = CST.BOOST_SPEED_MODIFIER
 
         PowerUp.external_speed_modifier = speed_modifier
