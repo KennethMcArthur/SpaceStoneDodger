@@ -22,8 +22,7 @@ pygame.init()
 
 def main_game():
     # Defining our game window
-    WIN = pygame.display.set_mode((CST.SCREEN_WIDTH, CST.SCREEN_HEIGHT))
-    CST.convert_assets_surfaces() # Converts all surface sprites for better performances
+    WIN = CST.MAIN_DISPLAY
     pygame.display.set_caption("Space Stone Dodger!")
 
     game_menu = SceneMenu.GameMenu(WIN)

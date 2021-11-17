@@ -20,18 +20,6 @@ def load_image(asset_folder: str, filename: str) -> pygame.Surface:
         raise SystemExit(message)
 
 
-def convert_assets_surfaces():
-    """ Converts asset surfaces, to be called after setting up the display """
-    global SHIP_SPRITE
-    global ASTEROID_SPRITE
-    global SPACE_BG
-    global METAL_SCRAP_SPRITE
-    SHIP_SPRITE = SHIP_SPRITE.convert_alpha()
-    ASTEROID_SPRITE = ASTEROID_SPRITE.convert_alpha()
-    SPACE_BG = SPACE_BG.convert()
-    METAL_SCRAP_SPRITE = METAL_SCRAP_SPRITE.convert_alpha()
-
-
 def load_audio_sfx(audio_asset_folder: str, filename: str) -> pygame.mixer.Sound:
     """ Error handling audio loading function """
     fullname = os.path.join(audio_asset_folder, filename)
@@ -112,6 +100,7 @@ def get_sfx_volume() -> float:
 # Game Parameters
 FPS = 60
 SCREEN_WIDTH, SCREEN_HEIGHT = 900, 500
+MAIN_DISPLAY = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 STARS_SPEED = 2
 STAR_SPRITE_RADIUS = 1
@@ -163,10 +152,10 @@ AUDIO_ASSET_DIR = "Audio"
 AUDIO_SFX_DIR = os.path.join(ASSET_DIR, AUDIO_ASSET_DIR, "SFX")
 AUDIO_MUSIC_DIR = os.path.join(ASSET_DIR, AUDIO_ASSET_DIR, "MUSIC")
 TRANSLATIONS_FOLDER = "lang"
-SHIP_SPRITE = load_image(ASSET_DIR, "Ship.png")
-ASTEROID_SPRITE = load_image(ASSET_DIR, "asteroid.png")
-SPACE_BG = load_image(ASSET_DIR, "purple_space_bg.png") # by Digital Moons (https://digitalmoons.itch.io/)
-METAL_SCRAP_SPRITE = load_image(ASSET_DIR, "metal_scrap2.png")
+SHIP_SPRITE = load_image(ASSET_DIR, "Ship.png").convert_alpha()
+ASTEROID_SPRITE = load_image(ASSET_DIR, "asteroid.png").convert_alpha()
+SPACE_BG = load_image(ASSET_DIR, "purple_space_bg.png").convert() # by Digital Moons (https://digitalmoons.itch.io/)
+METAL_SCRAP_SPRITE = load_image(ASSET_DIR, "metal_scrap2.png").convert_alpha()
 TITLE_FONT = os.path.join(ASSET_DIR, "kongtext.ttf") # Font by codeman38 | cody@zone38.net | http://www.zone38.net/
 SFX_POWERUP_COLLECTED = load_audio_sfx(AUDIO_SFX_DIR, "sci-fi-positive-notification.ogg")
 SFX_ASTEROID_IMPACT = load_audio_sfx(AUDIO_SFX_DIR, "impactPlate_heavy_004.ogg")
@@ -176,6 +165,7 @@ MUSIC_MENU = "joystock-neon-lights.ogg"
 MUSIC_LOSINGSCREEN = "Power Bots Loop.ogg"
 MUSIC_GAMELEVEL = "background-loop-melodic-techno-04-3822.ogg"
 MUSIC_ENDCINEMATIC = "bensound-scifi.ogg"
+
 
 # Custom Pygame Events
 PLAYER_HIT = pygame.USEREVENT + 1
