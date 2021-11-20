@@ -90,12 +90,6 @@ class Scene:
             unprocessed += passed
             time = time_2
 
-            for event in pygame.event.get():
-                self.event_checking(event)
-                    
-            # Key state capturing
-            keys_pressed = pygame.key.get_pressed() # Gets the bool state of all keyboard buttons
-
             # Frame stabilyzer
             while unprocessed >= FRAME_CAP:
                 unprocessed -= FRAME_CAP
@@ -104,6 +98,12 @@ class Scene:
             # What happens each frame
             if can_render:
                 game_timer += 1
+
+                for event in pygame.event.get():
+                    self.event_checking(event)
+                        
+                # Key state capturing
+                keys_pressed = pygame.key.get_pressed() # Gets the bool state of all keyboard buttons
 
                 # Key press checking
                 self.keys_to_check(keys_pressed)
